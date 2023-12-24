@@ -1,9 +1,9 @@
-import db
+from src import db
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from main import login_manager
+from src.main import login_manager
 
 
 class Producto(db.Base):
