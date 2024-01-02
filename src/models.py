@@ -1,35 +1,41 @@
-from src import db
+# Built-in imports
+# Thirty part imports
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from src.main import login_manager
+# Local imports
+from src import login_manager, db
 
 
-class Producto(db.Base):
+class Producto(db.Model):
     """
     Create a product (productos) table. This table stores the company's products
     """
 
     __tablename__ = "producto"
     id = Column(Integer, primary_key=True)
-    descripcion = Column(String(20), nullable=False)
-    categoria = Column(Integer(), nullable=False)
-    stock = Column(Integer(), nullable=False)
+    # index=True is to improve the queries.
+    # unique=True is to check if the data is already in the table
+    nombre = Column(String(100), index=True, unique=True, nullable=False)
+    descripcion = Column(String(20), index=True, unique=False, nullable=False)
+    categoria = Column(Integer(), index=True, unique=False, nullable=False)
+    stock = Column(Integer(), unique=False, nullable=False)
 
-    def __init__(self, contenido, categoria, stock):
-        self.descripcion = contenido
+    def __init__(self, nombre, descripcion, categoria, stock):
+        self.nombre = nombre
+        self.descripcion = descripcion
         self.categoria = categoria
         self.stock = stock
 
     def __repr__(self):
-        return "Tarea {}: {} ({}) ({})".format(self.id, self.descripcion, self.categoria, self.stock)
+        return "Tarea {}: {} ({}) ({}) ({})".format(self.id, self.nombre, self.descripcion, self.categoria, self.stock)
 
     def __str__(self):
-        return "Tarea {}: {} ({}) ({})".format(self.id, self.descripcion, self.categoria, self.stock)
+        return "Tarea {}: {} ({}) ({}) ({})".format(self.id, self.nombre, self.descripcion, self.categoria, self.stock)
 
 
-class Compra(db.Base):
+class Compra(db.Model):
     """
     Create a purchase (compra) table. This table stores the purchases done by company
     """
@@ -52,7 +58,7 @@ class Compra(db.Base):
         return "Compra {}: {} ({}) ({})".format(self.id, self.producto_id, self.cantidad, self.fecha_de_compra)
 
 
-class Venta(db.Base):
+class Venta(db.Model):
     """
     Create a sell (venta) table. This table stores the sells done by company
     """
@@ -81,9 +87,9 @@ class Venta(db.Base):
         )
 
 
-class Usuario(UserMixin, db.Base):
+class Usuario(UserMixin, db.Model):
     """
-    Create a User (usuario) table. This table stores the users.
+    Create a User (usuario) table. This table stores the usuarios.
     UserMixin (from flask_login library) provides the implementation for the properties:
         - is_authenticated() method that returns True if the user has provided valid credentials
         - is_active() method that returns True if the user’s account is active
@@ -94,7 +100,8 @@ class Usuario(UserMixin, db.Base):
     __tablename__ = "usuario"
 
     id = Column(Integer, primary_key=True)
-    fullname = Column(String(120), index=True, unique=False, nullable=False)
+    nombre = Column(String(120), index=True, unique=False, nullable=False)
+    apellido = Column(String(120), index=True, unique=False, nullable=False)
     username = Column(String(50), index=True, unique=True, nullable=False)
     email = Column(String(80), index=True, unique=True, nullable=False)
     password_hash = Column(String(128))
@@ -108,8 +115,9 @@ class Usuario(UserMixin, db.Base):
         # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.check_password_hash.html
         return check_password_hash(self.password_hash, password)
 
-    def __init__(self, fullname, email, username, password, is_admin=False):
-        self.fullname = fullname
+    def __init__(self, nombre, apellido, email, username, password, is_admin=False):
+        self.nombre = nombre
+        self.apellido = apellido
         self.email = email
         self.username = username
         # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.generate_password_hash.html
@@ -117,7 +125,10 @@ class Usuario(UserMixin, db.Base):
         self.is_admin = is_admin
 
     def __repr__(self):
-        return f"<User: {self.username}>"
+        return "User {}: {} ({}) ({}) ({})".format(self.id, self.nombre, self.apellido, self.username, self.email)
+
+    def __str__(self):
+        return "User {}: {} ({}) ({}) ({})".format(self.id, self.nombre, self.apellido, self.username, self.email)
 
 
 # Set up user_loader

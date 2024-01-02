@@ -8,6 +8,8 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask_bootstrap import Bootstrap
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy  # https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/
 from flask_login import LoginManager
 
@@ -50,10 +52,42 @@ def create_app(config_name):
         UPLOAD_FOLDER=UPLOAD_FOLDER,
     )
 
+    # https://pythonhosted.org/Flask-Bootstrap/
+    # Flask-Bootstrap packages Bootstrap into an extension that mostly consists of a blueprint named ‘bootstrap’.
+    # It can also create links to serve Bootstrap from a CDN and works with no boilerplate code in your application.
+    Bootstrap(app)
+
     db.init_app(app)
 
     login_manager.init_app(app)
     login_manager.login_message = "Debes iniciar sesión para acceder a esta página"
     login_manager.login_view = "auth.login"
+
+    migrate = Migrate(app, db)  # https://flask-migrate.readthedocs.io/en/latest/
+
+    # Home Blueprint
+    from .home import home as home_bprint
+
+    app.register_blueprint(home_bprint)
+
+    # Product Blueprint
+    from .producto import producto as producto_bprint
+
+    app.register_blueprint(producto_bprint)
+
+    # Admin Blueprint
+    from .admin import admin as admin_bprint
+
+    app.register_blueprint(admin_bprint)
+
+    # User Blueprint
+    from .usuario import usuario as usuario_bprint
+
+    app.register_blueprint(usuario_bprint)
+
+    # Authorization Blueprint
+    from .auth import auth as auth_bprint
+
+    app.register_blueprint(auth_bprint)
 
     return app
