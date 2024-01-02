@@ -1,11 +1,24 @@
+# Built-in imports
+# Third-Party imports
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+# Local imports
 from ..models import Usuario
 
 
-class SignUpForm(FlaskForm):
+class BaseForm(FlaskForm):
+    """
+    Using Spanish for the built-in messages: https://wtforms.readthedocs.io/en/stable/i18n/#internationalization-i18n.
+    Apply it for all forms
+    """
+
+    class Meta:
+        locales = ["es_ES"]
+
+
+class SignUpForm(BaseForm):
     """
     Form for usuarios to create new account
     """
@@ -22,7 +35,7 @@ class SignUpForm(FlaskForm):
         ],
     )
     confirm_password = PasswordField(
-        label="Confirm Password",
+        label="Confirmar contraseña",
         validators=[DataRequired(), EqualTo("password", message="¡Ambos campos de contraseña deben ser iguales!")],
     )
     submit = SubmitField("Registro")
@@ -36,7 +49,7 @@ class SignUpForm(FlaskForm):
             raise ValidationError("El nombre de usuario ya está en uso.")
 
 
-class LoginForm(FlaskForm):
+class LoginForm(BaseForm):
     """
     Form for users to login
     """

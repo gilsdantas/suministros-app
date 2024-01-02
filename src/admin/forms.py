@@ -19,7 +19,7 @@ class ProductoForm(FlaskForm):
 
 class UsuarioForm(FlaskForm):
     """
-    Form for an admin to edit a user
+    Form for an admin to edit a usuario
     """
 
     nombre = StringField("Nombre", validators=[DataRequired()])

@@ -17,10 +17,10 @@ from ..models import Usuario
 def signup():
     """
     Handle requests to the /signup route
-    Add a user to the database through the sign-up form
+    Add a usuario to the database through the sign-up form
     """
 
-    req = request.get_json() if request.get_json() else request.form
+    req = request.data if request.data else request.form
     form = SignUpForm(obj=req)
 
     if request.method == "POST":
@@ -33,11 +33,12 @@ def signup():
             is_admin=req.get("is_admin", False),
         )
 
-        # add user to the database
+        # add usuario to the database
         try:
             db.session.add(usuario)
             db.session.commit()
-        except SQLAlchemyError:
+        except SQLAlchemyError as error:
+            print(f"Error: {error}")
             db.session.rollback()
             abort(403, f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.')
         except Exception as error:
@@ -49,6 +50,7 @@ def signup():
         return redirect(url_for("auth.login"), 201)
     elif request.method == "GET":
         # load registration template
+        print("Estou em GET request for Auth")
         return render_template("auth/registro.html", form=form, title="Sign Up")
     else:
         abort(405)
@@ -58,21 +60,21 @@ def signup():
 def login():
     """
     Handle requests to the /login route
-    Log a user in through the sign-in form
+    Log a usuario in through the sign-in form
     """
 
-    req = request.get_json() if request.get_json() else request.form
+    req = request.data if request.data else request.form
 
     form = LoginForm()
 
     if request.method == "POST":
-        # Check if the usuarios exists in the DB and if the password entered matches the password in the DB
+        # Check if the user exists in the DB and if the password entered matches the password in the DB
         usuario = Usuario.query.filter_by(email=form.email.data).first()
-        if usuario is not None and usuario.check_password(form.password.data):
+        if usuario and usuario.check_password(form.password.data):
             # Log user in
             login_user(usuario)
 
-            # Redirect to the correct dashboard (admin or normal usuario) page after login
+            # Redirect to the correct dashboard (admin or no-admin user) page after login
             if usuario.is_admin:
                 return redirect(url_for("home.admin_dashboard"))
             else:
@@ -91,7 +93,7 @@ def login():
 def logout():
     """
     Handle requests to the /logout route
-    Log a user out through the logout link
+    Log a usuario out through the logout link
     """
 
     logout_user()

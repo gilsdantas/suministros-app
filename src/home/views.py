@@ -32,11 +32,11 @@ def admin_dashboard():
     return render_template("home/admin_dashboard.html", title="Dashboard")
 
 
-@home.route("/dashboard")
+@home.route("/usuario/dashboard")
 @login_required
 def dashboard():
     """
-    Render the dashboard template on the /dashboard route
+    Render the dashboard template on the /usuario/dashboard route
     """
-
-    return redirect(url_for("user.dashboard", user_id=current_user.id))
+    print(f"Current user Id: {current_user.id}")
+    return redirect(url_for("usuario.dashboard", usuario_id=current_user.id))

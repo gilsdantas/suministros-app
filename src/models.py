@@ -66,7 +66,7 @@ class Venta(db.Model):
     __tablename__ = "venta"
     id = Column(Integer, primary_key=True)
     producto_id = Column(Integer, ForeignKey("producto.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("usuario.id"), nullable=False)
     cantidad = Column(Integer, nullable=False)
     fecha_de_venta = Column(String(23), nullable=False)
 
@@ -91,9 +91,9 @@ class Usuario(UserMixin, db.Model):
     """
     Create a User (usuario) table. This table stores the usuarios.
     UserMixin (from flask_login library) provides the implementation for the properties:
-        - is_authenticated() method that returns True if the user has provided valid credentials
-        - is_active() method that returns True if the user’s account is active
-        - is_anonymous() method that returns True if the current user is an anonymous user
+        - is_authenticated() method that returns True if the usuario has provided valid credentials
+        - is_active() method that returns True if the usuario’s account is active
+        - is_anonymous() method that returns True if the current usuario is an anonymous usuario
         - get_id() method which, given a User instance, returns the unique ID for that object
     """
 

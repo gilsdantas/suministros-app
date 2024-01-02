@@ -4,17 +4,12 @@ from pathlib import Path
 
 # Thirty part imports
 from flask import Flask
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import url_for
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy  # https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/
-from flask_login import LoginManager
 
 # Local imports
-from src import database
 from config import app_config
 
 db = SQLAlchemy()
@@ -36,6 +31,7 @@ def create_app(config_name):
 
     app = Flask(__name__, instance_relative_config=True)
 
+    # Create a 'database' folder if it is not done yet
     try:
         os.makedirs(Path(CURRENT_DIR, "database"))
     except OSError:
@@ -48,7 +44,7 @@ def create_app(config_name):
     app.config.from_mapping(
         SECRET_KEY="TeMpOrArYkEyHaSbEeNuSeD",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,  # avoid FSADeprecationWarning
-        SQLALCHEMY_DATABASE_URI=f"sqlite:///{Path(db_dir, 'producto.db')}",
+        SQLALCHEMY_DATABASE_URI=f"sqlite:///{Path(db_dir, 'suministros.db')}",
         UPLOAD_FOLDER=UPLOAD_FOLDER,
     )
 

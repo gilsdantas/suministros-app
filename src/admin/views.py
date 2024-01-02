@@ -161,7 +161,7 @@ def lista_usuarios():
 @login_required
 def edit_users(id_usuario):
     """
-    Edit a user
+    Edit a usuario
     """
 
     check_admin()
