@@ -71,11 +71,6 @@ def create_app(config_name):
 
     app.register_blueprint(producto_bprint)
 
-    # Admin Blueprint
-    from .admin import admin as admin_bprint
-
-    app.register_blueprint(admin_bprint)
-
     # User Blueprint
     from .usuario import usuario as usuario_bprint
 
