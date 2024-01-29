@@ -1,0 +1,39 @@
+<!-- templates/productos/review_checkout.html -->
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %} Review Checkout {% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+
+        <h1>Review Your Checkout</h1>
+        <table>
+          <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for product_id, quantity in selected_products.items() %}
+          <tr>
+            <td>{{ get_product_name(product_id) }}</td>
+            <td>{{ quantity }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <form method="post" action="{{ url_for('producto.confirm_checkout') }}">
+          <button type="submit">Confirm Checkout</button>
+        </form>
+        <a href="{{ url_for('producto.lista_productos') }}">Go Back to Product Selection</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

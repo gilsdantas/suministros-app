@@ -1,0 +1,65 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %} Users {% endblock %}
+{% block body %}
+<script type="text/javascript">
+  window.setTimeout("document.getElementById('flash-message').style.display='none';", 2500);
+</script>
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        <div id="flash-message"> {{ utils.flashed_messages() }} </div>
+        <br/>
+        <h1 style="text-align:center;">Users</h1>
+        {% if users %}
+          <hr class="intro-divider">
+          <div class="center">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="30%"> Fullname </th>
+                  <th width="15%"> Username </th>
+                  <th width="25%"> E-mail </th>
+                  <th width="10%"> Is admin? </th>
+                  <th width="10%"> Edit </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for user in users %}
+                {% if user.is_admin %}
+                    <tr style="background-color: #fff251; color: black;">
+                        <td> <i class="fa fa-key"></i> {{ user.fullname }} </td>
+                        <td> {{ user.username }} </td>
+                        <td> {{ user.email }} </td>
+                        <td> {{ user.is_admin }} </td>
+                        <td>
+                          <a href="{{ url_for('admin.edit_users', id=user.id) }}">
+                            <i class="fa fa-pencil"></i> Edit
+                          </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                      <td> {{ user.fullname }} </td>
+                      <td> {{ user.username }} </td>
+                      <td> {{ user.email }} </td>
+                      <td> {{ user.is_admin }} </td>
+                      <td>
+                        <a href="{{ url_for('admin.edit_users', id=user.id) }}">
+                          <i class="fa fa-pencil"></i> Edit
+                        </a>
+                      </td>
+                    </tr>
+                {% endif %}
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

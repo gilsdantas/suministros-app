@@ -1,0 +1,93 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %} Lista de Productos {% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+        <h1 style="text-align:center;">Producto</h1>
+        <hr class="intro-divider">
+        <div class="center">
+          <form method="post" action="{{ url_for('producto.review_checkout') }}">
+            <table class="table table-striped table-bordered" style="margin: auto;">
+              <thead>
+                <tr>
+                  <th style="width: 25%;"> Nombre </th>
+                  <th style="width: 30%;"> Descripción </th>
+                  <th style="width: 10%;"> Categoria </th>
+                  <th style="width: 5%;"> Precio </th>
+                  <th style="width: 7%;"> En stock </th>
+                  <th style="width: 15%;"> Comprar </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for producto in productos.items %}
+                <tr>
+                  <td> {{ producto.nombre }}</td>
+                  <td> {{ producto.descripcion }}</td>
+                  <td> {{ producto.categoria }}</td>
+                  <td> {{ producto.precio }}</td>
+                  <td> {{ producto.stock }}</td>
+                  <td>
+                    <input type="checkbox" name="selected_products[]" value="{{ producto.id }}">
+                    <input type="number" name="product_quantity_{{ producto.id }}" value="0" min="1" max="10" disabled>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- ... (other parts of the file) -->
+            <div><button type="submit" class="buy-button">Comprar productos</button></div>
+          </form>
+          <div class="pagination">
+                <ul class="pagination">
+                    {% if productos.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('producto.lista_productos', page=productos.prev_num) }}" style="color: #aec251;">«</a>
+                        </li>
+                    {% endif %}
+                    {% for num in productos.iter_pages() %}
+                        {% if num %}
+                            <li class="page-item{% if num == productos.page %} active{% endif %}">
+                                <a class="page-link" href="{{ url_for('producto.lista_productos', page=num) }}" style="color: #aec251;">{{ num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled"><span style="color: #aec251;">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if productos.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('producto.lista_productos', page=productos.next_num) }}" style="color: #aec251;">»</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add event listeners to checkboxes
+        document.querySelectorAll('input[name="selected_products[]"]').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                handleCheckboxChange(checkbox);
+            });
+        });
+    });
+
+    function handleCheckboxChange(checkbox) {
+        const quantityInput = checkbox.parentElement.querySelector('input[type="number"]');
+        if (checkbox.checked) {
+            quantityInput.removeAttribute("disabled");
+        } else {
+            quantityInput.setAttribute("disabled", "disabled");
+        }
+    }
+</script>
+{% endblock %}

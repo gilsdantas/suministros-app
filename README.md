@@ -42,3 +42,7 @@ Los plazos de corrección serán de entre 7 y 15 días desde la fecha de entrega
 Esta defensa tendrá una longitud aproximada de 10 minutos.
 
 ¡Mucha suerte!
+
+### Nota
+
+Haga [click aquí](./README.INTRUCTIONS.md) para leer las instrucciones y los pasos de instalación.
