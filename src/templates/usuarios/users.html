@@ -29,7 +29,7 @@
                   <td> {{ usuario.username }} </td>
                   <td> {{ usuario.email }} </td>
                   <td>
-                    <a href="{{ url_for('usuario.editar_usuario', usuario_id=usuario.id) }}">
+                    <a href="{{ url_for('usuario_bp.editar_usuario', usuario_id=usuario.id) }}">
                       <i class="fa fa-pencil"></i> Editar
                     </a>
                   </td>

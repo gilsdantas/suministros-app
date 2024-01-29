@@ -1,6 +1,6 @@
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
-{% block title %} Dashboard {% endblock %}
+{% block title %} Home Dashboard {% endblock %}
 {% block body %}
 <div class="intro-header">
     <div class="container">
@@ -9,7 +9,7 @@
                 <div class="intro-message">
                     {% if no_result_yet %}
                         <h1>No hay productos comprados anteriormente.</h1>
-                        <h3>¿Te gusta comprar algo?</h3>
+                        <h3>¿Te gusta comprar algo? <a href="{{ url_for('producto.lista_productos') }}">Haz clic aquí y disfrútalo</a></h3>
                     {% else %}
                         <h3>Productos Comprados</h3>
                         <div class="inner">

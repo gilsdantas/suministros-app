@@ -1,0 +1,25 @@
+<!-- templates/productos/confirm_checkout.html -->
+{% extends "base.html" %}
+{% block title %} Checkout Confirmed {% endblock %}
+{% block body %}
+    <h1>Checkout Confirmed</h1>
+    <p>Your purchase has been confirmed. Thank you!</p>
+    <h2>Selected Products:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product_id, quantity in selected_products.items() %}
+                <tr>
+                    <td>{{ get_product_name(product_id) }}</td>
+                    <td>{{ quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('producto.lista_productos') }}">Go Back to Product Selection</a>
+{% endblock %}

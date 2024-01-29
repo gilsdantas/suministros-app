@@ -1,10 +1,8 @@
 # Built-in imports
 # Thirty part imports
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, RadioField, HiddenField
-from wtforms.validators import DataRequired, InputRequired, Email
-
-# Local imports
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Email
 
 
 class BaseForm(FlaskForm):
@@ -19,11 +17,11 @@ class BaseForm(FlaskForm):
 
 class UsuarioForm(BaseForm):
     """
-    Form for a usuario to edit its information
+    Form for a user to edit its information
     """
 
     nombre = StringField("Nombre", validators=[DataRequired()])
     apellido = StringField("Apellido", validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("E-Mail", validators=[Email()])
-    submit = SubmitField("Editar")
+    submit = SubmitField("Guardar")

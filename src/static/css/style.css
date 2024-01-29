@@ -5,7 +5,7 @@ body, html {
 
 body, h1, h2, h3 {
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 700;
+    font-weight: 300;
 }
 
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
@@ -129,6 +129,27 @@ p.copyright {
   min-width: 200px;
   min-height: 30px;
   margin: 10px;
+}
+
+.buy-button-container {
+    text-align: right;
+    margin-top: 10px;
+}
+
+/* Styles for the Comprar button (same as before) */
+.buy-button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    width: 170px;
+}
+
+.buy-button:hover {
+    background-color: #45a049;
 }
 
 button {

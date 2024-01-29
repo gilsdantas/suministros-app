@@ -1,15 +1,13 @@
 # Built-in imports
-import json
-
 # Third-Party imports
 from flask import abort, flash, redirect, render_template, request, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, LoginManager
 from sqlalchemy.exc import SQLAlchemyError
 
 # Local imports
 from . import auth
-from .. import db
 from .forms import LoginForm, SignUpForm
+from .. import db
 from ..models import Usuario
 
 
@@ -17,7 +15,7 @@ from ..models import Usuario
 def signup():
     """
     Handle requests to the /signup route
-    Add a usuario to the database through the sign-up form
+    Add a usuarios to the database through the sign-up form
     """
 
     req = request.data if request.data else request.form
@@ -33,7 +31,7 @@ def signup():
             is_admin=req.get("is_admin", False),
         )
 
-        # add usuario to the database
+        # add usuarios to the database
         try:
             db.session.add(usuario)
             db.session.commit()
@@ -60,7 +58,7 @@ def signup():
 def login():
     """
     Handle requests to the /login route
-    Log a usuario in through the sign-in form
+    Log a user in through the sign-in form
     """
 
     req = request.data if request.data else request.form
@@ -93,7 +91,7 @@ def login():
 def logout():
     """
     Handle requests to the /logout route
-    Log a usuario out through the logout link
+    Log a usuarios out through the logout link
     """
 
     logout_user()
@@ -101,3 +99,12 @@ def logout():
 
     # Redirect to the login page
     return redirect(url_for("auth.login"))
+
+
+login_manager = LoginManager()
+
+
+# Set up user_loader
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))

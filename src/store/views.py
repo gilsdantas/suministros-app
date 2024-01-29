@@ -5,11 +5,10 @@ from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 # Local imports
-from . import admin
+from . import store
 from .forms import ProductoForm
 from .. import db, CURRENT_DIR, allowed_file
 from ..models import Usuario, Producto
-from ..admin.forms import UsuarioForm
 
 
 def check_admin():
@@ -21,7 +20,7 @@ def check_admin():
         abort(403)
 
 
-@admin.route("/admin/productos", methods=["GET", "POST"])
+@store.route("/admin/productos", methods=["GET", "POST"])
 @login_required
 def lista_productos():
     """
@@ -34,7 +33,7 @@ def lista_productos():
     return render_template("admin/productos/productos.html", productos=todos_los_productos, title="Lista de Productos")
 
 
-@admin.route("/admin/productos/adiciona", methods=["GET", "POST"])
+@store.route("/admin/productos/adiciona", methods=["GET", "POST"])
 @login_required
 def crear_producto():
     """
@@ -77,7 +76,7 @@ def crear_producto():
     )
 
 
-@admin.route("/admin/productos/edita/<int:id>", methods=["GET", "POST"])
+@store.route("/admin/productos/edita/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_producto(id_producto):
     """
@@ -125,7 +124,7 @@ def editar_producto(id_producto):
     )
 
 
-@admin.route("/admin/productos/elimina/<int:id>", methods=["GET", "DELETE"])
+@store.route("/admin/productos/elimina/<int:id>", methods=["GET", "DELETE"])
 @login_required
 def eliminar_productos(id_producto):
     """
@@ -144,7 +143,7 @@ def eliminar_productos(id_producto):
     return redirect(url_for("admin.lista_productos"))
 
 
-@admin.route("/admin/usuarios", methods=["GET", "POST"])
+@store.route("/admin/usuarios", methods=["GET", "POST"])
 @login_required
 def lista_usuarios():
     """
@@ -154,14 +153,14 @@ def lista_usuarios():
     check_admin()
 
     all_users = Usuario.query.all()
-    return render_template("admin/usuarios/usuario.html", users=all_users, title="Lista Usuarios")
+    return render_template("admin/usuarios/usuarios.html", users=all_users, title="Lista Usuarios")
 
 
-@admin.route("/admin/usuarios/edita/<int:id>", methods=["GET", "POST"])
+@store.route("/admin/usuarios/edita/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_users(id_usuario):
     """
-    Edit a usuario
+    Edit a usuarios
     """
 
     check_admin()
@@ -179,9 +178,9 @@ def edit_users(id_usuario):
         usuario.is_admin = True if form.is_admin.data == "True" else False
 
         try:
-            # edit usuario in the database
+            # edit usuarios in the database
             db.session.commit()
-            flash("Ha editado exitosamente al usuario.")
+            flash("Ha editado exitosamente al usuarios.")
         except SQLAlchemyError:
             db.session.rollback()
             abort(403, f'Usuario "{usuario.username}" o e-mail "{usuario.email}" ya existen en la base de datos.')
@@ -197,7 +196,7 @@ def edit_users(id_usuario):
     form.email.data = usuario.email
     form.is_admin.data = str(usuario.is_admin)
     return render_template(
-        "admin/usuarios/usuario.html",
+        "admin/usuarios/usuarios.html",
         action="Edit",
         edit_user=editar_un_usuario,
         form=form,

@@ -14,7 +14,7 @@ def homepage():
     """
     Render the homepage templates on the '/' or '/index' route
     """
-
+    print(f"=====> Index from home")
     # Send products to template index.html
     return render_template("home/index.html", title="Home")
 
@@ -32,11 +32,11 @@ def admin_dashboard():
     return render_template("home/admin_dashboard.html", title="Dashboard")
 
 
-@home.route("/usuario/dashboard")
+@home.route("/usuarios/dashboard")
 @login_required
 def dashboard():
     """
-    Render the dashboard template on the /usuario/dashboard route
+    Render the dashboard template on the /usuarios/dashboard route
     """
-    print(f"Current user Id: {current_user.id}")
-    return redirect(url_for("usuario.dashboard", usuario_id=current_user.id))
+    print(f"=====> Current user Id: {current_user.id}")
+    return redirect(url_for("usuario_bp.dashboard", usuario_id=current_user.id))

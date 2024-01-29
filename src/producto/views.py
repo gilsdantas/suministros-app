@@ -1,50 +1,73 @@
-# Built-in imports
-# Thirty part imports
-# Local imports
-from src.models import Producto
+# src/producto/views.py
+from flask import redirect, url_for, render_template, request, session
+
+from decimal import Decimal
 from . import producto
+from ..models import Producto
 
 
-# @producto.route("/crear-producto", methods=["POST"])
-# def crear_producto():
-#     categorias = {
-#         0: "Sin categoria",
-#         1: "Laptop",
-#         2: "Desktop",
-#         3: "Periferico",
-#         4: "Otros",
-#     }
-#     producto = Producto(
-#         descripcion=request.form["descripcion_producto"],
-#         categoria=categorias[int(request.form["categoria_producto"])],
-#         stock=request.form["stock_producto"],
-#     )
-#     db.session.add(producto)
-#     db.session.commit()
-#
-#     return redirect(url_for("home"))
-#
-#
-# @producto.route("/eliminar-producto/<id>")
-# def eliminar_producto(id):
-#     producto = db.session.query(Producto).filter_by(id=int(id)).delete()
-#     db.session.commit()
-#
-#     return redirect(url_for("home"))
-#
-#
-# @producto.route("/tarea-hecha/<id>")
-# def hecha(id):
-#     # Se obtiene la tarea que se busca
-#     tarea = db.session.query(Producto).filter_by(id=int(id)).first()
-#
-#     # Guardamos en la variable booleana de la tarea, su contrario
-#     tarea.hecha = not tarea.hecha
-#
-#     # Ejecutar la operación pendiente de la base de datos return redirect(url_for('home')) # Esto nos redirecciona a
-#     # la función home()
-#     db.session.commit()
-#
-#     # Esto nos redirecciona a la función home() y si todo ha ido bien, al refrescar, la tarea eliminada ya no
-#     # aparecera en el  listado
-#     return redirect(url_for("home"))
+@producto.route("/producto/lista-productos", methods=("GET", "POST"))
+def lista_productos():
+    page = request.args.get("page", 1, type=int)
+    productos = Producto.query.filter(Producto.stock > 0).paginate(page=page, per_page=10, error_out=False)
+
+    if request.method == "POST":
+        selected_products = request.form.getlist("selected_products[]")
+        quantities = {}
+
+        for product_id in selected_products:
+            quantity_key = f"product_quantity_{product_id}"
+            quantity_value = request.form.get(quantity_key, 0)
+            if quantity_value == "undefined":
+                quantity_value = 0
+
+            quantities[product_id] = int(quantity_value)
+
+        # Store the selected products and quantities in the session
+        session["selected_products"] = quantities
+
+        return redirect(url_for("producto.review_checkout"))
+
+    return render_template(
+        "productos/productos.html", productos=productos, title="Lista productos", get_product_name=get_product_name
+    )
+
+
+@producto.route("/producto/review-checkout", methods=("GET", "POST"))
+def review_checkout():
+    # Retrieve selected products and quantities from the session
+    selected_products = session.get("selected_products", {})
+    print(f"selected_products: ", selected_products)
+
+    # ToDo: Process the data, e.g., update the database, send confirmation emails, etc.
+
+    return render_template(
+        "productos/review_checkout.html", selected_products=selected_products, get_product_name=get_product_name
+    )
+
+
+@producto.route("/producto/confirm-checkout", methods=["POST"])
+def confirm_checkout():
+    # Retrieve selected products and quantities from the session
+    selected_products = session.get("selected_products", {})
+
+    # Process the data, e.g., update the database, send confirmation emails, etc.
+
+    return render_template("productos/confirm_checkout.html", selected_products=selected_products)
+
+
+@producto.route("/producto/buy-products", methods=["POST"])
+def buy_products():
+    selected_product_ids = request.form.getlist("selected_products")
+
+    # Implement logic to create entries in the Sell table and update Product stock
+
+    # Clear the session after completing the purchase
+    session.pop("selected_products", None)
+
+    return redirect(url_for("producto.lista_productos"))
+
+
+def get_product_name(product_id):
+    prod = Producto.query.get(product_id)
+    return prod.nombre if prod else "Producto desconocido"

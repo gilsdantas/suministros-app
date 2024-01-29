@@ -29,7 +29,7 @@
                     <li><a href="{{ url_for('admin.lista_usuarios') }}">Usuarios</a></li>
                   {% else %}
                     <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('usuario.usuario_detalles') }}">Editar detalles</a></li>
+                    <li><a href="{{ url_for('usuario_bp.usuario_detalles') }}">Editar detalles</a></li>
                   {% endif %}
                   <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                   <li><a><i class="fa fa-user"></i> ¡Hola, {{ current_user.username }}!</a></li>

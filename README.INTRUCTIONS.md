@@ -41,17 +41,24 @@ Set the environment variables::
     $ export FLASK_CONFIG=development
     ```
 
+**Note:** If you want to run the app in debug mode, add the below environment variable as well:
+
+    ```bash
+    $ export FLASK_DEBUG=1
+    ```
+
 Or on Windows cmd:
 
     ```console
     c:\path\to\project\suministros-app> set FLASK_APP=run
     c:\path\to\project\suministros-app> set FLASK_ENV=development
     c:\path\to\project\suministros-app> set FLASK_CONFIG=development
+    c:\path\to\project\suministros-app> set FLASK_DEBUG=1
     ```
 
 Create the database::
 
-**Note:** The below first line (db init) is only needed when running for the first time
+**Note:** These commands are needed just when running for the first time
 
     ```bash
     $ flask db init
