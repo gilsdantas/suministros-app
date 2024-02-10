@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="intro-message">
-                    {% if no_result_yet %}
+                    {% if is_empty %}
                         <h1>No hay productos comprados anteriormente.</h1>
                         <h3>¿Te gusta comprar algo? <a href="{{ url_for('producto.lista_productos') }}">Haz clic aquí y disfrútalo</a></h3>
                     {% else %}

@@ -8,7 +8,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Local imports
 from src import db
 
-
 # User-Product association table
 usuario_producto = Table(
     "usuario_producto",
@@ -72,14 +71,13 @@ class Usuario(UserMixin, db.Model):
     apellido = Column(String(120), index=True, unique=False, nullable=False)
     username = Column(String(50), index=True, unique=True, nullable=False)
     email = Column(String(80), index=True, unique=True, nullable=False)
-    password_hash = Column(String(128))
+    password = Column(String(128))
     is_admin = Column(Boolean, default=False)
 
     # Establishing the relationship between Usuario and Producto
     productos = relationship("Producto", secondary=usuario_producto, back_populates="usuarios")
 
-    # Flask-Login integration
-    # NOTE: is_authenticated, is_active, and is_anonymous are methods from Flask-Login
+    # Flask-Login integration: is_authenticated, is_active, and is_anonymous are methods from Flask-Login
     @property
     def is_authenticated(self):
         return True
@@ -98,7 +96,7 @@ class Usuario(UserMixin, db.Model):
         """
 
         # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.check_password_hash.html
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password, password)
 
     def get_id(self):
         return self.id
@@ -113,7 +111,7 @@ class Usuario(UserMixin, db.Model):
         self.email = email
         self.username = username
         # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.generate_password_hash.html
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
         self.is_admin = is_admin
 
     def __repr__(self):
@@ -187,9 +185,9 @@ def build_sample_db():
         nombre="admin",
         apellido="admin",
         email="admin@admin.com",
-        username="super",
+        username="admin",
         is_admin=True,
-        password=generate_password_hash("super"),
+        password=generate_password_hash("admin"),
     )
     db.session.add(admin_user)
 
@@ -214,7 +212,7 @@ def build_sample_db():
             apellido=last_names[i],
             email=f"{first_names[i].lower()}@{last_names[i].lower()}.com",
             username=f"{first_names[i].lower()}_{last_names[i].lower()}",
-            password=generate_password_hash("123456"),
+            password=generate_password_hash("123456", method="pbkdf2:sha256"),
         )
         db.session.add(usuario)
 

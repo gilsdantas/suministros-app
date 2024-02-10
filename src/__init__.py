@@ -31,6 +31,7 @@ def create_app(config_name):
 
     app = Flask(__name__, instance_relative_config=True)
     db_folder_created = False
+
     # Create a 'database' folder if it is not done yet
     try:
         os.makedirs(Path(CURRENT_DIR, "database"))
@@ -62,6 +63,7 @@ def create_app(config_name):
         with app.app_context():
             build_sample_db()
 
+    # Some imports are being done here to avoid circular import issues
     from src.auth.views import login_manager
 
     login_manager.init_app(app)
@@ -74,9 +76,10 @@ def create_app(config_name):
         app,
         name="Maria Online Store",
         index_view=MyAdminIndexView(),
-        # base_template='base.html',
+        base_template="my_master.html",
         template_mode="bootstrap4",
     )
+
     from src.models import Usuario
 
     admin.add_view(MyAdminModelView(Usuario, db.session))

@@ -27,6 +27,7 @@
                     <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('admin.lista_productos') }}">Productos</a></li>
                     <li><a href="{{ url_for('admin.lista_usuarios') }}">Usuarios</a></li>
+                    <li><a href="{{ url_for('admin.index') }}">Panel de Admin</a></li>
                   {% else %}
                     <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('usuario_bp.usuario_detalles') }}">Editar detalles</a></li>
@@ -37,6 +38,7 @@
                   <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
                   <li><a href="{{ url_for('auth.signup') }}">Registro</a></li>
                   <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                  <li><a href="{{ url_for('admin.index') }}">Panel de Admin</a></li>
                 {% endif %}
               </ul>
           </div>
@@ -45,22 +47,25 @@
     <div class="wrapper">
       {% block body %}
       {% endblock %}
-      <div class="push"></div>
     </div>
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <ul class="list-inline">
-                        <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+                        <li><a href="{{ url_for('home.homepage') }}"> Home </a></li>
                         <li class="footer-menu-divider">⋅</li>
                         {% if current_user.is_authenticated %}
-                          <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                          <li><a href="{{ url_for('auth.logout') }}"> Logout </a></li>
                           <li class="footer-menu-divider">⋅</li>
+                          {% if current_user.is_admin %}
+                            <li><a href="{{ url_for('admin.index') }}"> Panel de Admin </a></li>
+                            <li class="footer-menu-divider">⋅</li>
+                          {% endif %}
                         {% else %}
-                          <li><a href="{{ url_for('auth.signup') }}">Registro</a></li>
+                          <li><a href="{{ url_for('auth.signup') }}"> Registro </a></li>
                           <li class="footer-menu-divider">⋅</li>
-                          <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                          <li><a href="{{ url_for('auth.login') }}"> Login </a></li>
                           <li class="footer-menu-divider">⋅</li>
                         {% endif %}
                     </ul>

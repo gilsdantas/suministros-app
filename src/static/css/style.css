@@ -8,6 +8,10 @@ body, h1, h2, h3 {
     font-weight: 300;
 }
 
+body, .wrapper {
+    overflow-x: hidden;
+}
+
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
   color: #aec251;
 }
@@ -17,8 +21,9 @@ a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:h
 }
 
 footer {
-    padding: 50px 0;
+    padding: 20px;
     background-color: #f8f8f8;
+    min-height: 100px;
 }
 
 p.copyright {
@@ -44,7 +49,6 @@ p.copyright {
 
 .center {
     margin: auto;
-    width: 80%;
     padding: 10px;
 }
 
@@ -53,7 +57,7 @@ p.copyright {
     border-top: 1px solid #e7e7e7;
 }
 
-.footer, .push {
+.footer {
   clear: both;
   height: 4em;
 }
@@ -65,8 +69,6 @@ p.copyright {
 }
 
 .intro-header {
-    padding-top: 50px;
-    padding-bottom: 50px;
     text-align: center;
     color: #aaaaaa;
     background-size: cover;
@@ -99,10 +101,7 @@ p.copyright {
 }
 
 .wrapper {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin: 0 auto -4em;
+  min-height: 100vh;
 }
 
 .outer {

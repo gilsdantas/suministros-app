@@ -68,6 +68,8 @@ def login():
     if request.method == "POST":
         # Check if the user exists in the DB and if the password entered matches the password in the DB
         usuario = Usuario.query.filter_by(email=form.email.data).first()
+        print(f"---> Usuaruio: {usuario}")
+        print(f"---> Password: {form.password.data}")
         if usuario and usuario.check_password(form.password.data):
             # Log user in
             login_user(usuario)
@@ -91,7 +93,7 @@ def login():
 def logout():
     """
     Handle requests to the /logout route
-    Log a usuarios out through the logout link
+    Log a user out through the logout link
     """
 
     logout_user()

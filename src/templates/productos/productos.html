@@ -72,6 +72,7 @@
   </div>
 </div>
 <script>
+    window.setTimeout("document.getElementById('flash-message').style.display='none';", 2500);
     document.addEventListener("DOMContentLoaded", function () {
         // Add event listeners to checkboxes
         document.querySelectorAll('input[name="selected_products[]"]').forEach(function (checkbox) {

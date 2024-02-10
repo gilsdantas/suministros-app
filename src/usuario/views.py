@@ -23,7 +23,7 @@ def usuario_detalles():
     return render_template("usuarios/users.html", usuario=usuario_obj, title="Usuario Detalles")
 
 
-@usuario.route("/usuarios/editar/<int:usuario_id>", methods=["GET", "POST"])
+@usuario.route("/usuarios/<int:usuario_id>/editar", methods=["GET", "POST"])
 @login_required
 def editar_usuario(usuario_id):
     """
@@ -112,6 +112,6 @@ def dashboard(usuario_id):
 
     return render_template(
         "home/dashboard.html",
-        no_result_yet=bool(products),
+        is_empty=True if products == [] else False,
         title="Home Dashboard",
     )
