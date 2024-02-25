@@ -1,7 +1,11 @@
 # Built-in imports
 # Thirty part imports
+import os
+from datetime import datetime
+
+from flask import current_app
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, Table, DateTime, LargeBinary
 from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -29,17 +33,20 @@ class Producto(db.Model):
     categoria = Column(Integer(), index=True, nullable=False)
     precio = Column(Float(), index=True, nullable=False)
     stock = Column(Integer(), unique=False, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    image = Column(LargeBinary)
 
     # Establishing the relationship between Usuario and Producto and Ventas
     usuarios = relationship("Usuario", secondary=usuario_producto, back_populates="productos")
     ventas = relationship("Venta", back_populates="producto")
 
-    def __init__(self, nombre, descripcion, categoria, precio, stock):
+    def __init__(self, nombre, descripcion, categoria, precio, stock, image):
         self.nombre = nombre
         self.descripcion = descripcion
         self.categoria = categoria
         self.precio = precio
         self.stock = stock
+        self.image = image
 
     def __repr__(self):
         return (
@@ -172,11 +179,23 @@ class Venta(db.Model):
         return f"Venta {self.id}: ({self.producto_id}) ({self.user_id}) ({self.cantidad}) ({self.fecha_de_venta})"
 
 
+def read_an_image(image_name: str):
+    try:
+        image_path = os.path.join(current_app.root_path, "static/images", image_name)
+    except FileNotFoundError:
+        image_path = os.path.join(current_app.root_path, "static/images", "generic-product.png")
+
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+
+    return image_data
+
+
 def build_sample_db():
     """
     Populate db with some entries.
     """
-
+    print("Initial database population...")
     db.drop_all()
     db.create_all()
 
@@ -206,13 +225,14 @@ def build_sample_db():
         "Fernández",
     ]
 
+    password_hashed = generate_password_hash("123456")
     for i in range(len(first_names)):
         usuario = Usuario(
             nombre=first_names[i],
             apellido=last_names[i],
             email=f"{first_names[i].lower()}@{last_names[i].lower()}.com",
             username=f"{first_names[i].lower()}_{last_names[i].lower()}",
-            password=generate_password_hash("123456", method="pbkdf2:sha256"),
+            password=password_hashed,
         )
         db.session.add(usuario)
 
@@ -222,39 +242,44 @@ def build_sample_db():
     productos = {
         "sin_categorias": [
             {
-                "nombre": "Artículo sin Categoría 1",
-                "descripcion": "Descripción del Artículo sin Categoría 1",
+                "nombre": "Ultra Compact Lightwight",
+                "descripcion": "Descripción del Ultra Compact Lightwight",
                 "categoria": "Sin categoría",
                 "precio": 29.99,
                 "stock": 100,
+                "image_name": read_an_image("ultra-compact-lightwight.png"),
             },
             {
-                "nombre": "Artículo sin Categoría 2",
-                "descripcion": "Descripción del Artículo sin Categoría 2",
+                "nombre": "Reeferman Genetics Herb Grinder Metal",
+                "descripcion": "Descripción del Reeferman Genetics Herb Grinder Metal",
                 "categoria": "Sin categoría",
                 "precio": 19.50,
                 "stock": 80,
+                "image_name": read_an_image("reeferman-genetics-herb-grinder-metal.png"),
             },
             {
-                "nombre": "Artículo sin Categoría 3",
-                "descripcion": "Descripción del Artículo sin Categoría 3",
+                "nombre": "Carrete Electrico Para Pescar",
+                "descripcion": "Descripción del Carrete Electrico Para Pescar",
                 "categoria": "Sin categoría",
                 "precio": 34.75,
                 "stock": 120,
+                "image_name": read_an_image("carrete-electrico-para-pescar.jpg"),
             },
             {
-                "nombre": "Artículo sin Categoría 4",
-                "descripcion": "Descripción del Artículo sin Categoría 4",
+                "nombre": "Pelota Metálica Digital",
+                "descripcion": "Descripción del Pelota Metálica Digital",
                 "categoria": "Sin categoría",
                 "precio": 25.00,
                 "stock": 60,
+                "image_name": read_an_image("pelota-metalica-digital.png"),
             },
             {
-                "nombre": "Artículo sin Categoría 5",
-                "descripcion": "Descripción del Artículo sin Categoría 5",
+                "nombre": "Rubiks Cubo",
+                "descripcion": "Descripción del Rubiks Cubo",
                 "categoria": "Sin categoría",
                 "precio": 39.50,
                 "stock": 150,
+                "image_name": read_an_image("generic-product.png"),
             },
         ],
         "laptops": [
@@ -264,6 +289,7 @@ def build_sample_db():
                 "categoria": "Laptop",
                 "precio": 1599.99,
                 "stock": 20,
+                "image_name": read_an_image("laptop-premium-x.png"),
             },
             {
                 "nombre": "Laptop Ultraligera Y",
@@ -271,6 +297,7 @@ def build_sample_db():
                 "categoria": "Laptop",
                 "precio": 1299.50,
                 "stock": 15,
+                "image_name": read_an_image("laptop-ultraligera-y.png"),
             },
             {
                 "nombre": "Laptop Gamer Z",
@@ -278,6 +305,7 @@ def build_sample_db():
                 "categoria": "Laptop",
                 "precio": 1799.75,
                 "stock": 10,
+                "image_name": read_an_image("laptop-gamer-z.png"),
             },
             {
                 "nombre": "Laptop Todo Terreno A1",
@@ -285,6 +313,7 @@ def build_sample_db():
                 "categoria": "Laptop",
                 "precio": 1499.00,
                 "stock": 25,
+                "image_name": read_an_image("laptop-todo-terreno-a1.png"),
             },
             {
                 "nombre": "Laptop Económica B2",
@@ -292,6 +321,7 @@ def build_sample_db():
                 "categoria": "Laptop",
                 "precio": 899.99,
                 "stock": 30,
+                "image_name": read_an_image("laptop-economica-b2.png"),
             },
         ],
         "desktops": [
@@ -301,6 +331,7 @@ def build_sample_db():
                 "categoria": "Desktop",
                 "precio": 2299.99,
                 "stock": 12,
+                "image_name": read_an_image("pc-de-escritorio-potente-x.png"),
             },
             {
                 "nombre": "PC de Escritorio Compacta Y",
@@ -308,6 +339,7 @@ def build_sample_db():
                 "categoria": "Desktop",
                 "precio": 1499.50,
                 "stock": 18,
+                "image_name": read_an_image("pc-de-escritorio-compacta-y.png"),
             },
             {
                 "nombre": "PC de Escritorio Gamer Z",
@@ -315,6 +347,7 @@ def build_sample_db():
                 "categoria": "Desktop",
                 "precio": 1999.75,
                 "stock": 8,
+                "image_name": read_an_image("pc-de-escritorio-gamer-z.png"),
             },
             {
                 "nombre": "PC de Escritorio Todo en Uno A1",
@@ -322,6 +355,7 @@ def build_sample_db():
                 "categoria": "Desktop",
                 "precio": 1799.00,
                 "stock": 15,
+                "image_name": read_an_image("pc-de-escritorio-todo-en-uno-a1.png"),
             },
             {
                 "nombre": "PC de Escritorio Básica B2",
@@ -329,6 +363,7 @@ def build_sample_db():
                 "categoria": "Desktop",
                 "precio": 899.99,
                 "stock": 25,
+                "image_name": read_an_image("pc-de-escritorio-basica-b2.png"),
             },
         ],
         "perifericos": [
@@ -338,6 +373,7 @@ def build_sample_db():
                 "categoria": "Periférico",
                 "precio": 99.99,
                 "stock": 50,
+                "image_name": read_an_image("teclado-mecánico-gaming-x.png"),
             },
             {
                 "nombre": "Ratón Inalámbrico Ergonómico Y",
@@ -345,6 +381,7 @@ def build_sample_db():
                 "categoria": "Periférico",
                 "precio": 49.50,
                 "stock": 40,
+                "image_name": read_an_image("raton-inalambrico-ergonomico-y.png"),
             },
             {
                 "nombre": "Auriculares con Cancelación de Ruido Z",
@@ -352,6 +389,7 @@ def build_sample_db():
                 "categoria": "Periférico",
                 "precio": 129.75,
                 "stock": 30,
+                "image_name": read_an_image("auriculares-con-cancelacion-de-ruido-z.png"),
             },
             {
                 "nombre": "Monitor Curvo de 27 Pulgadas A1",
@@ -359,6 +397,7 @@ def build_sample_db():
                 "categoria": "Periférico",
                 "precio": 299.00,
                 "stock": 20,
+                "image_name": read_an_image("monitor-curvo-de-27-pulgadas-a1.png"),
             },
             {
                 "nombre": "Impresora Multifuncional B2",
@@ -366,6 +405,7 @@ def build_sample_db():
                 "categoria": "Periférico",
                 "precio": 149.99,
                 "stock": 35,
+                "image_name": read_an_image("impresora-multifuncional-b2.png"),
             },
         ],
         "otros": [
@@ -375,6 +415,7 @@ def build_sample_db():
                 "categoria": "Otros",
                 "precio": 79.99,
                 "stock": 25,
+                "image_name": read_an_image("gadget-innovador-x.png"),
             },
             {
                 "nombre": "Accesorio Tecnológico Único Y",
@@ -382,6 +423,7 @@ def build_sample_db():
                 "categoria": "Otros",
                 "precio": 59.50,
                 "stock": 15,
+                "image_name": read_an_image("accesorio-tecnológico-unico-y.png"),
             },
             {
                 "nombre": "Dispositivo Inteligente para el Hogar Z",
@@ -389,6 +431,7 @@ def build_sample_db():
                 "categoria": "Otros",
                 "precio": 129.75,
                 "stock": 12,
+                "image_name": read_an_image("dispositivo-iInteligente-para-el-hogar-z.png"),
             },
             {
                 "nombre": "Gafas de Realidad Virtual A1",
@@ -396,6 +439,7 @@ def build_sample_db():
                 "categoria": "Otros",
                 "precio": 199.00,
                 "stock": 18,
+                "image_name": read_an_image("gafas-de-realidad-virtual-a1.png"),
             },
             {
                 "nombre": "Batería Externa de Alta Capacidad B2",
@@ -403,6 +447,7 @@ def build_sample_db():
                 "categoria": "Otros",
                 "precio": 49.99,
                 "stock": 40,
+                "image_name": read_an_image("bateria-externa-de-alta-capacidad-b2.png"),
             },
         ],
     }
@@ -415,6 +460,7 @@ def build_sample_db():
                 categoria=value.get("categoria", "Sin categoría"),
                 precio=value.get("precio", 0.0),
                 stock=value.get("stock", 0),
+                image=value.get("image_name", read_an_image("generic-product.png")),
             )
             db.session.add(producto)
 

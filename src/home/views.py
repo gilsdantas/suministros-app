@@ -2,10 +2,12 @@
 # Thirty part imports
 from flask import render_template, abort, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from werkzeug.utils import redirect
 
 # Local imports
 from . import home
+from ..models import Producto
 
 
 @home.route("/")
@@ -14,9 +16,9 @@ def homepage():
     """
     Render the homepage templates on the '/' or '/index' route
     """
-    print(f"=====> Index from home")
+    carousel_products = Producto.query.order_by(func.random()).limit(15).all()
     # Send products to template index.html
-    return render_template("home/index.html", title="Home")
+    return render_template("home/index.html", title="Home", carousel_products=carousel_products)
 
 
 @home.route("/admin/dashboard")

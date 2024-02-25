@@ -43,12 +43,12 @@ def editar_usuario(usuario_id):
         try:
             # edit usuarios in the database
             db.session.commit()
-            flash("Ha editado correctamente el usuarios.")
+            flash("Ha editado correctamente el usuarios.", "info")
         except SQLAlchemyError:
             db.session.rollback()
-            abort(403, f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.')
+            flash(f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.', "error")
         except Exception as error:
-            abort(500, error)
+            flash(str(error), "error")
 
         # redirect to the usuarios page
         return redirect(url_for("usuario_bp.usuario_detalles"))

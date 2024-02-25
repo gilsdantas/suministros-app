@@ -1,9 +1,8 @@
 # Built-in imports
 # Third-Party imports
-from flask import abort
 from flask_wtf import FlaskForm
 from werkzeug.security import check_password_hash
-from wtforms import PasswordField, StringField, SubmitField, ValidationError, form
+from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 # Local imports
@@ -42,11 +41,11 @@ class SignUpForm(BaseForm):
     )
     submit = SubmitField("Registro")
 
-    def validar_email(self, field):
+    def validate_email(self, field):
         if Usuario.query.filter_by(email=field.data).first():
             raise ValidationError("Correo electrónico ya está en uso.")
 
-    def validar_username(self, field):
+    def validate_username(self, field):
         if Usuario.query.filter_by(username=field.data).first():
             raise ValidationError("El nombre de usuarios ya está en uso.")
 
@@ -60,15 +59,21 @@ class LoginForm(BaseForm):
     password = PasswordField("Contraseña", validators=[DataRequired()])
     submit = SubmitField("Login")
 
-    def validar_login(self, field):
+    def validate_email(self, field):
         usuario = self.get_user()
-        print(f"---> Usuaruio: {usuario}")
-        print(f"---> Password: {self.password.data}")
-        if (usuario is None) or (usuario and not check_password_hash(usuario.password, self.password.data)):
-            abort(403, "Usuario(a) o contrasenã inválidos")
+        print(f"===> Usuario is: {usuario}")
+        if usuario is None:
+            raise ValidationError("Usuario no encontrado", "error")
+
+    def validate_password(self, field):
+        usuario = self.get_user()
+        print(f"===> Validate password (user): {usuario.password}")
+        print(f"===> Validate password (db): {self.password.data}")
+        print(
+            f"===> check_password_hash(usuario.password, self.password.data): {check_password_hash(usuario.password, self.password.data)}"
+        )
+        if usuario and not usuario.check_password(self.password.data):
+            raise ValidationError("La contraseña no es válida", "error")
 
     def get_user(self):
-        user = Usuario.query.filter_by(email=self.email.data).first()
-        if not user:
-            abort(403, "Usuario(a) no encontrado")
-        return user
+        return Usuario.query.filter_by(email=self.email.data).first()

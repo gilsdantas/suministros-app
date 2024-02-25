@@ -1,5 +1,4 @@
 <!-- templates/productos/review_checkout.html -->
-{% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
 {% block title %} Review Checkout {% endblock %}
 {% block body %}
@@ -7,31 +6,31 @@
   <div class="outer">
     <div class="middle">
       <div class="inner">
-        <br/>
-        {{ utils.flashed_messages() }}
-        <br/>
-
-        <h1>Review Your Checkout</h1>
-        <table>
+        <h1>Revise su pago</h1>
+        <table class="table table-striped">
           <thead>
-          <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-          </tr>
+            <tr>
+              <th>Producto</th>
+              <th>Cuantidad</th>
+            </tr>
           </thead>
           <tbody>
-          {% for product_id, quantity in selected_products.items() %}
-          <tr>
-            <td>{{ get_product_name(product_id) }}</td>
-            <td>{{ quantity }}</td>
-          </tr>
-          {% endfor %}
+            {% for product_id, quantity in selected_products.items() %}
+            <tr>
+              <td>{{ product_names[product_id] }}</td>
+              <td>{{ quantity }}</td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
+        <div>
+          <p>Precio total a pagar:: {{ total_amount }}</p>
+        </div>
         <form method="post" action="{{ url_for('producto.confirm_checkout') }}">
-          <button type="submit">Confirm Checkout</button>
+          <input type="hidden" name="selected_products" value="{{ selected_products }}">
+          <button type="submit" class="btn-default">Confirmar pago</button>
         </form>
-        <a href="{{ url_for('producto.lista_productos') }}">Go Back to Product Selection</a>
+        <a href="{{ url_for('producto.lista_productos') }}">Volver a la lista de selección de productos</a>
       </div>
     </div>
   </div>

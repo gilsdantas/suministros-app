@@ -1,25 +1,35 @@
-<!-- templates/productos/confirm_checkout.html -->
 {% extends "base.html" %}
-{% block title %} Checkout Confirmed {% endblock %}
+{% block title %}Checkout Confirmed{% endblock %}
 {% block body %}
-    <h1>Checkout Confirmed</h1>
-    <p>Your purchase has been confirmed. Thank you!</p>
-    <h2>Selected Products:</h2>
-    <table>
-        <thead>
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <h1 style="text-align:center;">Pago confirmado</h1>
+        <p style="text-align:center;">Tu compra ha sido confirmada. ¡Gracias!</p>
+        <hr class="intro-divider">
+        <h2>Productos comprados:</h2>
+        <table class="table table-striped table-bordered" style="margin: auto;">
+          <thead>
             <tr>
-                <th>Product</th>
-                <th>Quantity</th>
+              <th>Producto</th>
+              <th>Cuantidad</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for product_id, quantity in selected_products.items() %}
-                <tr>
-                    <td>{{ get_product_name(product_id) }}</td>
-                    <td>{{ quantity }}</td>
-                </tr>
+            <tr>
+              <td>{{ product_names[product_id] }}</td>
+              <td>{{ quantity }}</td>
+            </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <a href="{{ url_for('producto.lista_productos') }}">Go Back to Product Selection</a>
+          </tbody>
+        </table>
+        <div style="text-align:center;">
+          <a href="{{ url_for('producto.lista_productos') }}" class="btn-default">Volver a la lista de selección de productos</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
