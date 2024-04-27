@@ -1,8 +1,13 @@
-from src import create_app
-from src.models import build_sample_db
+# Built-in imports
+import os
 
-# config_name = os.getenv("FLASK_CONFIG")
-config_name = "development"
+# Third-party imports
+# Local imports
+from src import create_app
+from src.utils.utils import build_sample_db
+
+config_name = os.getenv("FLASK_CONFIG", "development")
+
 app = create_app(config_name)
 
 if __name__ == "__main__":

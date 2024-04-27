@@ -2,6 +2,7 @@
 # Thirty part imports
 from flask import render_template, flash, abort, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
 
@@ -104,14 +105,18 @@ def dashboard(usuario_id):
     # Get the user object from DB
     usuario_obj = Usuario.query.get_or_404(usuario_id)
 
-    # Use joinedload to eager load the associated products
-    user_products = Usuario.query.filter(Usuario.id == usuario_obj.id).options(joinedload(Usuario.productos)).first()
-
-    # Access the products through user_products.products
-    products = user_products.productos if user_products else []
-
+    # Query the Venta table to get the products bought by the user
+    user_products = (
+        db.session.query(Producto, func.sum(Venta.cantidad).label("cantidad"))
+        .join(Venta)
+        .filter(Venta.usuario_id == usuario_obj.id)
+        .group_by(Producto)
+        .all()
+    )
+    print(f"===> user_products: {user_products}")
     return render_template(
         "home/dashboard.html",
-        is_empty=True if products == [] else False,
+        products=user_products,
+        is_empty=True if user_products == [] else False,
         title="Home Dashboard",
     )

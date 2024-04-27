@@ -9,7 +9,7 @@
         <h1 style="text-align:center;">Producto</h1>
         <hr class="intro-divider">
         <div class="center">
-          <form method="post" action="{{ url_for('producto.review_checkout') }}">
+          <form method="post" action="{{ url_for('producto_bp.review_checkout') }}">
             <table class="table table-striped table-bordered" style="margin: auto;">
               <thead>
                 <tr>
@@ -26,8 +26,8 @@
                 {% for producto in productos.items %}
                 <tr>
                   <td>
-                    <a href="#" onclick="showLargeImage('{{ url_for('producto.get_producto_image', producto_id=producto.id) }}'); return false;">
-                        <img src="{{ url_for('producto.get_producto_image', producto_id=producto.id) }}" class="thumbnail-img" alt="Product Image">
+                    <a href="#" onclick="showLargeImage('{{ url_for('producto_bp.get_producto_image', producto_id=producto.id) }}'); return false;">
+                        <img src="{{ url_for('producto_bp.get_producto_image', producto_id=producto.id) }}" class="thumbnail-img" alt="Product Image">
                     </a>
                   </td>
                   <td> {{ producto.nombre }}</td>
@@ -37,7 +37,7 @@
                   <td> {{ producto.stock }}</td>
                   <td>
                     <input type="checkbox" name="selected_products[]" value="{{ producto.id }}">
-                    <input type="number" name="product_quantity_{{ producto.id }}" value="0" min="1" max="10" disabled>
+                    <input type="number" name="product_{{ producto.id }}" value="0" min="1" max="10" disabled>
                   </td>
                 </tr>
                 {% endfor %}
@@ -51,13 +51,13 @@
                 <ul class="pagination">
                     {% if productos.has_prev %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('producto.lista_productos', page=productos.prev_num) }}" style="color: #aec251;">«</a>
+                            <a class="page-link" href="{{ url_for('producto_bp.lista_productos', page=productos.prev_num) }}" style="color: #aec251;">«</a>
                         </li>
                     {% endif %}
                     {% for num in productos.iter_pages() %}
                         {% if num %}
                             <li class="page-item{% if num == productos.page %} active{% endif %}">
-                                <a class="page-link" href="{{ url_for('producto.lista_productos', page=num) }}" style="color: #aec251;">{{ num }}</a>
+                                <a class="page-link" href="{{ url_for('producto_bp.lista_productos', page=num) }}" style="color: #aec251;">{{ num }}</a>
                             </li>
                         {% else %}
                             <li class="disabled"><span style="color: #aec251;">...</span></li>
@@ -65,7 +65,7 @@
                     {% endfor %}
                     {% if productos.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('producto.lista_productos', page=productos.next_num) }}" style="color: #aec251;">»</a>
+                            <a class="page-link" href="{{ url_for('producto_bp.lista_productos', page=productos.next_num) }}" style="color: #aec251;">»</a>
                         </li>
                     {% endif %}
                 </ul>

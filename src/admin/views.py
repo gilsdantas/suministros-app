@@ -4,15 +4,116 @@ import flask_admin as admin
 import flask_login as login
 from flask import redirect, url_for, request, flash, session
 from flask_admin import expose, helpers
-from flask_admin.contrib import sqla
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.form import FileUploadField, Select2Widget
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileRequired
+from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
+from wtforms import fields, validators
+
+from src.producto.forms import ProductoForm
+
+
+# from src.admin.forms import LoginAdminForm
+
 
 # Local imports
-from src.admin.forms import LoginAdminForm
+# from .forms import LoginAdminForm
 
 
-class MyAdminModelView(sqla.ModelView):
+class BaseForm(FlaskForm):
+    """
+    Using Spanish for the built-in messages: https://wtforms.readthedocs.io/en/stable/i18n/#internationalization-i18n.
+    Apply it for all forms
+    """
+
+    class Meta:
+        locales = ["es_ES"]
+
+
+class LoginAdminForm(BaseForm):
+    """
+    Form for admins to login
+    """
+
+    email = fields.StringField(validators=[validators.InputRequired()])
+    password = fields.PasswordField(validators=[validators.InputRequired()])
+
+    def validate_login(self, field):
+        usuario = self.get_user()
+
+        return_value = FlaskForm.validate(self)
+        if not return_value:
+            return False
+
+        if usuario is None:
+            self.email.errors.append("Usuario(a) inválido")
+            return False
+
+        if not check_password_hash(usuario.password, self.password.data):
+            self.password.errors.append("Contrasenã inválida")
+            return False
+
+        return True
+
+    def get_user(self):
+        from src.models import Usuario
+
+        return Usuario.query.filter_by(email=self.email.data).first()
+
+
+class ProductoModelView(ModelView):
+    column_display_pk = True
+    form = ProductoForm
+
+    # How columns are displayed in the list view
+    column_list = ("id", "nombre", "descripcion", "categoria", "precio", "stock", "image")
+
+    # Column labels
+    column_labels = {
+        "nombre": "Nombre",
+        "descripcion": "Descripción",
+        "categoria": "Categoría",
+        "precio": "Precio",
+        "stock": "Existencias",
+        "image": "Imagen",
+    }
+
+    # Column filters
+    column_filters = ("nombre", "categoria", "precio", "stock")
+
+    form_widget_args = {"categoria": {"widget": Select2Widget()}}
+
+    def on_model_change(self, form, model, is_created):
+        if form.imagen.data:
+            filename = secure_filename(form.imagen.data.filename)
+            model.save_images(form.imagen.data)
+
     def is_accessible(self):
-        return login.current_user.is_authenticated
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+
+class UsuarioModelView(ModelView):
+    column_display_pk = True
+
+    # How columns are displayed in the list view
+    column_list = ("id", "nombre", "apellido", "username", "email", "password")
+
+    # Column labels
+    column_labels = {
+        "nombre": "Nombre",
+        "apellido": "Apellido",
+        "username": "Nombre de usuario",
+        "email": "Correo electrónico",
+        "password": "contraseña",
+    }
+
+    # Column filters
+    column_filters = ("nombre", "apellido", "username", "email")
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
 
 
 class MyAdminIndexView(admin.AdminIndexView):

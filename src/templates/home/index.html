@@ -18,12 +18,12 @@
                                 <div class="carousel-content">
                                     <h3>{{ product.nombre }}</h3>
                                     <div class="product-image">
-                                        <img src="{{ url_for('producto.get_producto_image', producto_id=product.id) }}" alt="Product Image">
+                                        <img src="{{ url_for('producto_bp.get_producto_image', producto_id=product.id) }}" alt="Product Image">
                                     </div>
                                     <p class="product-description">{{ product.descripcion }}</p>
                                 </div>
                                 <div class="carousel-buttons">
-                                    <a href="{{ url_for('producto.buy_products', producto_id=product.id) }}"  method="post" class="btn btn-primary">Buy Now</a>
+                                    <a href="{{ url_for('producto_bp.buy_products', producto_id=product.id) }}"  method="post" class="btn btn-primary">Buy Now</a>
                                 </div>
                             </div>
                             {% endfor %}

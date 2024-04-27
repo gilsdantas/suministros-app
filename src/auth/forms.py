@@ -5,8 +5,11 @@ from werkzeug.security import check_password_hash
 from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+from src.models import Usuario
+
+
 # Local imports
-from ..models import Usuario
+# from ..models import Usuario
 
 
 class BaseForm(FlaskForm):
@@ -61,18 +64,15 @@ class LoginForm(BaseForm):
 
     def validate_email(self, field):
         usuario = self.get_user()
-        print(f"===> Usuario is: {usuario}")
         if usuario is None:
+            print(f"===> Validate user email: {usuario}")
             raise ValidationError("Usuario no encontrado", "error")
 
     def validate_password(self, field):
         usuario = self.get_user()
-        print(f"===> Validate password (user): {usuario.password}")
-        print(f"===> Validate password (db): {self.password.data}")
-        print(
-            f"===> check_password_hash(usuario.password, self.password.data): {check_password_hash(usuario.password, self.password.data)}"
-        )
-        if usuario and not usuario.check_password(self.password.data):
+
+        # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.check_password_hash.html
+        if usuario and not check_password_hash(usuario.password, self.password.data):
             raise ValidationError("La contraseña no es válida", "error")
 
     def get_user(self):

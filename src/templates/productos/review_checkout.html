@@ -24,13 +24,14 @@
           </tbody>
         </table>
         <div>
-          <p>Precio total a pagar:: {{ total_amount }}</p>
+          <hr class="intro-divider">
+          <p><b>Precio total a pagar:: {{ total_amount }}</b></p>
         </div>
-        <form method="post" action="{{ url_for('producto.confirm_checkout') }}">
+        <form method="post" action="{{ url_for('producto_bp.confirm_checkout') }}">
           <input type="hidden" name="selected_products" value="{{ selected_products }}">
           <button type="submit" class="btn-default">Confirmar pago</button>
         </form>
-        <a href="{{ url_for('producto.lista_productos') }}">Volver a la lista de selección de productos</a>
+        <a href="{{ url_for('producto_bp.lista_productos') }}">Volver a la lista de selección de productos</a>
       </div>
     </div>
   </div>

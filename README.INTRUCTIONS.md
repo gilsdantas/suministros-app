@@ -74,7 +74,16 @@ Run the application::
 
 Open <http://127.0.0.1:5000> in a browser.
 
-Note: An _ADMIN_ user should be add first. After that, you can add questions. Check the next section for more details.
+Note: An _ADMIN_ was created to allow access the admin page: admin@admin.com/admin
+
+## Next Steps
+
+As the next steps of this project, some topics should be addressed:
+- Users pre populated are unable to logging in from the home page
+- Redirecting is not working properly when a new user does a registration
+- Click on Home or company name (Maria Online Store) is not redirecting to the home page
+- Flash messages (notifications need to be revisited)
+- Number formats are incorrect. E.g.: 23.5 or 54.989999999999995
 
 ## Author
 

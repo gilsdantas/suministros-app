@@ -64,7 +64,7 @@ def crear_producto():
             abort(500, error)
 
         # redirect to productos page
-        return redirect(url_for("admin.lista_productos"))
+        return redirect(url_for("admin_bp.lista_productos"))
 
     # load question template
     return render_template(
@@ -107,7 +107,7 @@ def editar_producto(id_producto):
             abort(500, error)
 
         # redirect to the productos page
-        return redirect(url_for("admin.lista_productos"))
+        return redirect(url_for("admin_bp.lista_productos"))
 
     form.nombre.data = producto.nombre
     form.descripcion.data = producto.descripcion
@@ -140,7 +140,7 @@ def eliminar_productos(id_producto):
     flash("Ha eliminado correctamente el producto.", "info")
 
     # redirect to the product page
-    return redirect(url_for("admin.lista_productos"))
+    return redirect(url_for("admin_bp.lista_productos"))
 
 
 @store.route("/admin/usuarios", methods=["GET", "POST"])

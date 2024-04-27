@@ -1,6 +1,6 @@
 # Built-in imports
 # Third-Party imports
-from flask import abort, flash, redirect, render_template, request, url_for, get_flashed_messages
+from flask import flash, redirect, render_template, request, url_for, get_flashed_messages
 from flask_login import login_required, login_user, logout_user, LoginManager
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import check_password_hash
@@ -8,15 +8,14 @@ from werkzeug.security import check_password_hash
 # Local imports
 from . import auth
 from .forms import LoginForm, SignUpForm
-from .. import db
-from ..models import Usuario
+from ..models import Usuario, db
 
 
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     """
     Handle requests to the /signup route
-    Add a usuarios to the database through the sign-up form
+    Add a user to the database through the sign-up form
     """
 
     req = request.data if request.data else request.form
@@ -36,7 +35,7 @@ def signup():
         try:
             db.session.add(usuario)
             db.session.commit()
-        except SQLAlchemyError as error:
+        except SQLAlchemyError:
             db.session.rollback()
             flash(f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.', "error")
         except Exception as error:
@@ -60,21 +59,14 @@ def login():
     Log a user in through the sign-in form
     """
 
-    req = request.data if request.data else request.form
-    next_page = request.args.get("next")
+    # req = request.data if request.data else request.form
+    # next_page = request.args.get("next")
     form = LoginForm()
 
     if request.method == "POST":
         if form.validate_on_submit():
             # Check if the user exists in the DB and if the password entered matches the password in the DB
             usuario = Usuario.query.filter_by(email=form.email.data).first()
-            print(f"---> Usuaruio: {usuario}")
-            print(f"---> Password: {form.password.data}")
-            print(f"---> usuario.password: {usuario.password}")
-            print(
-                f"---> check_password_hash(usuario.password, form.password.data): {check_password_hash(usuario.password, form.password.data)}"
-            )
-
             if usuario and check_password_hash(usuario.password, form.password.data):
                 # Log user in
                 login_user(usuario)
@@ -83,7 +75,8 @@ def login():
                 next_page = request.args.get("next")
                 if next_page:
                     return redirect(next_page)
-                elif usuario.is_admin:
+
+                if usuario.is_admin:
                     return redirect(url_for("home.admin_dashboard"))
                 else:
                     return redirect(url_for("home.dashboard"))

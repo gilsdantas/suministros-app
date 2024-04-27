@@ -9,7 +9,6 @@
                 <div class="intro-message">
                     {% if is_empty %}
                         <h1>No hay productos comprados anteriormente.</h1>
-                        <h3>¿Te gusta comprar algo? <a href="{{ url_for('producto.lista_productos') }}">Haz clic aquí y disfrútalo</a></h3>
                     {% else %}
                         <h3>Productos Comprados</h3>
                         <div class="inner">
@@ -17,16 +16,19 @@
                             <table class="table table-striped table-bordered">
                               <thead>
                                 <tr>
+                                  <th width="auto"> Artículo </th>
                                   <th width="auto"> Producto </th>
+                                  <th width="auto"> Cantidad </th>
                                   <th width="auto"> Precio </th>
                                 </tr>
                               </thead>
                               <tbody>
-                              {% for producto in productos %}
+                              {% for producto, total_quantity in products %}
                                 <tr>
                                   <td> {{ loop.index0 + 1 }} </td>
-                                  <td> {{ producto[0] }} </td>
-                                  <td> {{ producto[1] }} </td>
+                                  <td> {{ producto.nombre }} </td>
+                                  <td> {{ total_quantity }} </td>
+                                  <td> {{ producto.precio }} </td>
                                 </tr>
                               {% endfor %}
                               </tbody>
@@ -34,6 +36,7 @@
                         </div>
                     </div>
                     {% endif %}
+                    <h3>¿Te gusta comprar algo? <a href="{{ url_for('producto_bp.lista_productos') }}">Haz clic aquí y disfrútalo</a></h3>
                 </div>
             </div>
         </div>

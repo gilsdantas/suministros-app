@@ -1,16 +1,17 @@
 # src/producto/views.py
+# Built-in imports
+import json
+import os
+from datetime import datetime
 from io import BytesIO
 
-from PIL import Image
-from flask import redirect, url_for, render_template, request, session, send_file, jsonify, flash
-
-from decimal import Decimal
-
+# Third-party imports
+from flask import redirect, url_for, render_template, request, session, send_file, jsonify, flash, current_app
 from flask_login import login_required, current_user
 
+# Local imports
+from src.models import Producto, db, Venta
 from . import producto
-from .. import db
-from ..models import Producto
 
 
 @producto.route("/add_producto", methods=["POST"])
@@ -56,10 +57,20 @@ def get_producto(producto_id):
 @producto.route("/get_producto_image/<int:producto_id>")
 def get_producto_image(producto_id):
     producto = Producto.query.get_or_404(producto_id)
-    return send_file(BytesIO(producto.image), mimetype="image/jpeg")
+    image_path = os.path.join(current_app.config["UPLOAD_FOLDER"], producto.image)
+
+    # Check if the image file exists
+    if not os.path.exists(image_path):
+        return "Image not found", 404
+
+    # Read the image file and return its data
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+
+    return send_file(BytesIO(image_data), mimetype="image/jpeg")
 
 
-@producto.route("/lista-productos", methods=("GET", "POST"))
+@producto.route("/lista_productos", methods=("GET", "POST"))
 def lista_productos():
     print("1. Inside endpoint List Productos")
     page = request.args.get("page", 1, type=int)
@@ -87,16 +98,17 @@ def lista_productos():
     )
 
 
-@producto.route("/review-checkout", methods=("GET", "POST"))
+@producto.route("/review_checkout", methods=["POST"])
 @login_required
 def review_checkout():
     selected_products = {}
     for key, value in request.form.items():
         if "selected_products" in key:
-            product_id = value
-            quantity_key = f"product_quantity_{product_id}"
-            quantity_value = request.form.get(quantity_key, 0)
-            selected_products[product_id] = int(quantity_value)
+            continue
+        product_id = key.replace("product_", "")
+        quantity_key = f"product_{product_id}"
+        quantity_value = request.form.get(quantity_key, 0)
+        selected_products[product_id] = int(quantity_value)
 
     total_amount = total_amount_to_pay(selected_products)
 
@@ -110,20 +122,27 @@ def review_checkout():
     )
 
 
-@producto.route("/confirm-checkout", methods=["POST"])
+@producto.route("/confirm_checkout", methods=["POST"])
 @login_required
 def confirm_checkout():
-    selected_products = {}
-    for key, value in request.form.items():
-        if "selected_products" in key:
-            product_id = value
-            quantity_key = f"product_quantity_{product_id}"
-            quantity_value = request.form.get(quantity_key, 0)
-            selected_products[product_id] = int(quantity_value)
+    # Gets the key 'selected_products'. It returns a dict as a string.
+    # We need also replace single quotes to double quotes to use json.loads (to convert to real dict)
+    selected_products = request.form.get("selected_products").replace("'", '"')
+    selected_products = json.loads(selected_products)
 
     total_amount = total_amount_to_pay(selected_products)
-
     product_names = {product_id: get_product_name(product_id) for product_id in selected_products.keys()}
+
+    # Save the purchased products to the database
+    for product_id, quantity in selected_products.items():
+        venta = Venta(
+            producto_id=int(product_id),
+            usuario_id=current_user.id,
+            cantidad=int(quantity),
+            fecha_de_venta=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+        db.session.add(venta)
+    db.session.commit()
 
     return render_template(
         "productos/confirm_checkout.html",
@@ -133,7 +152,7 @@ def confirm_checkout():
     )
 
 
-@producto.route("/buy-products", methods=["GET", "POST"])
+@producto.route("/buy_products", methods=["GET", "POST"])
 @login_required
 def buy_products():
     if not current_user.is_authenticated:
@@ -142,9 +161,8 @@ def buy_products():
         return redirect(url_for("auth.login", next=next_page))
 
     selected_product_ids = request.form.getlist("selected_products")
-    print("===> ", selected_product_ids)
 
-    return redirect(url_for("producto.lista_productos"))
+    return redirect(url_for("producto_bp.lista_productos"))
 
 
 def get_product_name(product_id):
@@ -158,6 +176,7 @@ def get_product_price(product_id):
 
 
 def total_amount_to_pay(selected_products):
+    # {6: 2, 7: 2}
     total_amount = 0
     for product_id, quantity in selected_products.items():
         price = get_product_price(product_id)
