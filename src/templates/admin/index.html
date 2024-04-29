@@ -1,53 +1,37 @@
 {% extends 'admin/master.html' %}
+{% import "bootstrap/utils.html" as utils %}
 {% block body %}
 {{ super() }}
+<script type="text/javascript">
+  window.setTimeout("document.getElementById('flash-message').style.display='none';", 2500);
+</script>
+<div id="flash-messages"> {{ utils.flashed_messages() }}</div>
 <div class="row-fluid">
-  <div>
-    {% if current_user.is_authenticated and current_user.is_admin %}
+  {% if current_user.is_authenticated and current_user.is_admin %}
     <h1>Panel de Admin</h1>
     <p>
       Bienvenido al panel de administración.
     </p>
-    {% else %}
-      <div id="flash-messages">
-        {% if session.get('flash_message') %}
-          <div class="alert alert-{{ session['flash_category'] }}" role="alert">
-            {{ session['flash_message'] }}
-          </div>
-          {% set _ = session.pop('flash_message', None) %}
-          {% set _ = session.pop('flash_category', None) %}
+  {% else %}
+    <form method="POST" action="">
+      {{ form.hidden_tag() if form.hidden_tag }}
+      {% for field in form if field.type != 'CSRFTokenField' %}
+      <div class="form-group">
+        {{ field.label }}<br>
+        {{ field }}
+        {% if field.errors %}
+        <ul>
+          {% for error in field.errors %}
+          <li class="error">{{ error }}</li>
+          {% endfor %}
+        </ul>
         {% endif %}
       </div>
-      <form method="POST" action="">
-        {{ form.hidden_tag() if form.hidden_tag }}
-        {% for field in form if field.type != 'CSRFTokenField' %}
-        <div class="form-group">
-          {{ field.label }}<br>
-          {{ field }}
-          {% if field.errors %}
-          <ul>
-            {% for error in field.errors %}
-            <li class="error">{{ error }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </div>
-        {% endfor %}
-        <button class="btn btn-primary" type="submit"> Submit </button>
-        <a class="btn btn-primary" href="/"><i class="icon-arrow-left icon-white"></i> Back </a>
-      </form>
-      {{ link | safe }}
-    {% endif %}
-  </div>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit"> Submit </button>
+      <a class="btn btn-primary" href="/"><i class="icon-arrow-left icon-white"></i> Back </a>
+    </form>
+  {{ link | safe }}
+  {% endif %}
 </div>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-      var flashMessages = document.getElementById('flash-messages');
-      if (flashMessages) {
-        flashMessages.style.display = 'none';
-      }
-    }, 3500); // Adjust the timeout value as needed
-  });
-</script>
 {% endblock body %}

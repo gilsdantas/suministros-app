@@ -30,14 +30,6 @@ p.copyright {
     margin: 15px 0 0;
 }
 
-.alert-info {
-    width: 50%;
-    margin: auto;
-    color: #687430;
-    background-color: #e6ecca;
-    border-color: #aec251;
-}
-
 .btn-default {
     border-color: #aec251;
     color: #aec251;
@@ -254,4 +246,36 @@ button:active {
     max-height: 50px; /* Adjust the maximum height as needed */
     display: block;
     margin: 0 auto; /* Center horizontally */
+}
+
+/* Flash message styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
 }

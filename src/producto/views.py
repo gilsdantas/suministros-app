@@ -72,23 +72,18 @@ def get_producto_image(producto_id):
 
 @producto.route("/lista_productos", methods=("GET", "POST"))
 def lista_productos():
-    print("1. Inside endpoint List Productos")
     page = request.args.get("page", 1, type=int)
     productos = Producto.query.filter(Producto.stock > 0).paginate(page=page, per_page=10, error_out=False)
 
     if request.method == "POST":
-        print("2. Inside POST IF")
         selected_products = {}
         for key, value in request.form.items():
-            print("3. Inside FOR")
             if key.startswith("selected_products[]"):
-                print("4. Inside Second IF")
                 product_id = value
                 quantity_key = f"product_quantity_{product_id}"
                 quantity_value = request.form.get(quantity_key, 0)
                 selected_products[product_id] = int(quantity_value)
 
-        print("5. Selected Products: ", selected_products)
         session["selected_products"] = selected_products
 
         return redirect(url_for("producto.review_checkout"))

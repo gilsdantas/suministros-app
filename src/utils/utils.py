@@ -25,7 +25,6 @@ def read_an_image(image_name: str):
         with open(upload_folder / "images" / "generic-product.png", "rb") as f:
             image_data = f.read()
 
-    print(f"---> image_data: {image_data}")
     return image_data
 
 
@@ -117,7 +116,7 @@ def create_sales():
     start_date = datetime.datetime.now() - datetime.timedelta(days=2 * 365)
     end_date = datetime.datetime.now() - datetime.timedelta(days=1)
 
-    for _ in range(100):
+    for _ in range(1000):
         producto_id = random.choice(product_ids)
         usuario_id = random.choice(user_ids)
         cantidad = random.randint(1, 10)

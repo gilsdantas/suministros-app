@@ -2,25 +2,16 @@
 # Third-part imports
 import flask_admin as admin
 import flask_login as login
-from flask import redirect, url_for, request, flash, session
+from flask import redirect, url_for, request, flash
 from flask_admin import expose, helpers
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.form import FileUploadField, Select2Widget
+from flask_admin.form import Select2Widget
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileRequired
-from passlib.hash import sha256_crypt
-from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import fields, validators
 
-from src.producto.forms import ProductoForm
-
-
-# from src.admin.forms import LoginAdminForm
-
-
 # Local imports
-# from .forms import LoginAdminForm
+from src.producto.forms import ProductoForm
 
 
 class BaseForm(FlaskForm):
@@ -52,7 +43,7 @@ class LoginAdminForm(BaseForm):
             self.email.errors.append("Usuario(a) inválido")
             return False
 
-        if not sha256_crypt.verify(self.password.data, usuario.password):
+        if field.data != usuario.password:
             self.password.errors.append("Contrasenã inválida")
             return False
 
@@ -99,7 +90,7 @@ class UsuarioModelView(ModelView):
     column_display_pk = True
 
     # How columns are displayed in the list view
-    column_list = ("id", "nombre", "apellido", "username", "email", "password")
+    column_list = ("id", "nombre", "apellido", "username", "email", "password", "fecha_de_registro")
 
     # Column labels
     column_labels = {
@@ -107,11 +98,33 @@ class UsuarioModelView(ModelView):
         "apellido": "Apellido",
         "username": "Nombre de usuario",
         "email": "Correo electrónico",
-        "password": "contraseña",
+        "password": "Contraseña",
+        "fecha_de_registro": "Fecha de Registro",
     }
 
     # Column filters
-    column_filters = ("nombre", "apellido", "username", "email")
+    column_filters = ("nombre", "apellido", "username", "email", "fecha_de_registro")
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+
+class VentaModelView(ModelView):
+    column_display_pk = True
+
+    # How columns are displayed in the list view
+    column_list = ("id", "producto_id", "usuario_id", "cantidad", "fecha_de_venta")
+
+    # Column labels
+    column_labels = {
+        "producto_id": "Producto",
+        "usuario_id": "Usuario",
+        "cantidad": "Cantidad",
+        "fecha_de_venta": "Fecha de Venta",
+    }
+
+    # Column filters
+    column_filters = ("producto_id", "usuario_id", "fecha_de_venta")
 
     def is_accessible(self):
         return login.current_user.is_authenticated and login.current_user.is_admin
@@ -123,8 +136,7 @@ class MyAdminIndexView(admin.AdminIndexView):
         if not login.current_user.is_authenticated:
             return redirect(url_for(".login_view"))
         if not login.current_user.is_admin:
-            session["flash_message"] = "No tienes permiso de administrador para acceder a este panel", "error"
-            session["flash_category"] = "error"
+            flash("No tienes permiso de administrador para acceder a este panel", "error")
             return redirect(url_for(".login_view"))
 
         form = LoginAdminForm()
@@ -140,15 +152,13 @@ class MyAdminIndexView(admin.AdminIndexView):
         if helpers.validate_form_on_submit(form):
             usuario = form.get_user()
             if usuario is None:
-                session["flash_message"] = "Correo electrónico o contraseña no válidos", "error"
-                session["flash_category"] = "error"
+                flash("Correo electrónico o contraseña no válidos", "error")
             else:
                 login.login_user(usuario)
                 if usuario.is_admin:
                     return redirect(url_for(".index"))
                 else:
-                    session["flash_message"] = "No tienes permiso de administrador para acceder a este panel", "error"
-                    session["flash_category"] = "error"
+                    flash("No tienes permiso de administrador para acceder a este panel", "error")
                     return redirect(url_for("home.dashboard"))  # Adjust the route name as needed
 
         self._template_args["form"] = form

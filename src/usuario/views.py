@@ -85,7 +85,7 @@ def dashboard(usuario_id):
         .group_by(Producto)
         .all()
     )
-    print(f"===> user_products: {user_products}")
+
     return render_template(
         "home/dashboard.html",
         products=user_products,

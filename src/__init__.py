@@ -13,7 +13,7 @@ from flask_sqlalchemy import SQLAlchemy  # https://flask-sqlalchemy.palletsproje
 
 # Local imports
 from config import app_config
-from .models import db
+from .models import db, Venta
 from .utils.utils import build_sample_db
 
 # from src.utils.utils import build_sample_db
@@ -87,7 +87,7 @@ def create_app(config_name):
     login_manager.login_message = "Debes iniciar sesión para acceder a esta página"
     login_manager.login_view = "auth.login"
 
-    from src.admin.views import MyAdminIndexView, UsuarioModelView, ProductoModelView
+    from src.admin.views import MyAdminIndexView, UsuarioModelView, ProductoModelView, VentaModelView
 
     admin = Admin(
         app,
@@ -101,6 +101,7 @@ def create_app(config_name):
 
     admin.add_view(UsuarioModelView(Usuario, db.session))
     admin.add_view(ProductoModelView(Producto, db.session))
+    admin.add_view(VentaModelView(Venta, db.session))
 
     migrate = Migrate(app, db)  # https://flask-migrate.readthedocs.io/en/latest/
 

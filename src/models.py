@@ -87,8 +87,8 @@ class Usuario(UserMixin, db.Model):
     apellido = Column(String(120), index=True, unique=False, nullable=False)
     username = Column(String(50), index=True, unique=True, nullable=False)
     email = Column(String(80), index=True, unique=True, nullable=False)
-    fecha_de_registro = Column(String(23), nullable=False)
-    password = Column(String())
+    fecha_de_registro = Column(DateTime)
+    password = Column(String(), nullable=False)
     is_admin = Column(Boolean, default=False)
 
     # Establishing the relationship between Usuario and Producto
@@ -118,7 +118,7 @@ class Usuario(UserMixin, db.Model):
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
-        self.fecha_de_registro = fecha_de_registro
+        self.fecha_de_registro = fecha_de_registro if fecha_de_registro else datetime.now()
         self.username = username
         self.password = password
         self.is_admin = is_admin
@@ -128,29 +128,6 @@ class Usuario(UserMixin, db.Model):
 
     def __str__(self):
         return f"Usuario {self.id}: ({self.nombre}) ({self.apellido}) ({self.username}) ({self.email})"
-
-
-class Compra(db.Model):
-    """
-    Create a purchase (compra) table. This table stores the purchases done by company
-    """
-
-    __tablename__ = "compra"
-    id = Column(Integer, primary_key=True)
-    producto_id = Column(Integer, ForeignKey("producto.id"), nullable=False)
-    cantidad = Column(Integer, nullable=False)
-    fecha_de_compra = Column(String(23), nullable=False)
-
-    def __init__(self, producto_id, cantidad, fecha_de_compra):
-        self.producto_id = producto_id
-        self.cantidad = cantidad
-        self.fecha_de_compra = fecha_de_compra
-
-    def __repr__(self):
-        return f"Compra {self.id}: ({self.producto_id}) ({self.cantidad}) " f"({self.fecha_de_compra})"
-
-    def __str__(self):
-        return f"Compra {self.id}: ({self.producto_id}) ({self.cantidad}) " f"({self.fecha_de_compra})"
 
 
 class Venta(db.Model):
@@ -172,7 +149,7 @@ class Venta(db.Model):
         self.producto_id = producto_id
         self.usuario_id = usuario_id
         self.cantidad = cantidad
-        self.fecha_de_venta = fecha_de_venta
+        self.fecha_de_venta = fecha_de_venta if fecha_de_venta else datetime.now()
 
     def __repr__(self):
         return f"Venta {self.id}: ({self.producto_id}) ({self.usuario_id}) ({self.cantidad}) ({self.fecha_de_venta})"

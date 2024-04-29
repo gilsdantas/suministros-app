@@ -1,25 +1,16 @@
-{% extends "base.html" %}
 {% import "bootstrap/utils.html" as utils %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %} Sign In {% endblock %}
+{% extends "base.html" %}
 {% block body %}
+<script type="text/javascript">
+  window.setTimeout("document.getElementById('flash-message').style.display='none';", 2500);
+</script>
 <div class="content-section">
+  <br/>
+  <div id="flash-messages"> {{ utils.flashed_messages() }} </div>
+  <br/>
   <div class="row justify-content-center">
     <div class="col-md-6">
-      <div id="flash-messages">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          <div> Messages: {{ messages }}</div>
-            {% set displayed_messages = [] %}
-            {% for category, message in messages %}
-              <div> Message: {{ message }}</div>
-              <div> Category: {{ category }}</div>
-              <div class="alert alert-{{ category }}" role="alert"> {{ message }} </div>
-              {% set _ = displayed_messages.append(message) %}
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-      </div>
       <div class="center">
         <h1>Inicia sesión para acceder a tu cuenta</h1>
         <br/>

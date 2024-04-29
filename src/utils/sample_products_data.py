@@ -5,7 +5,7 @@ productos = {
             "descripcion": "Descripción del Ultra Compact Lightwight",
             "categoria": "Sin categoría",
             "precio": 29.99,
-            "stock": 100,
+            "stock": 1000,
             "image_name": "images/ultra-compact-lightwight.png",
         },
         {
@@ -13,7 +13,7 @@ productos = {
             "descripcion": "Descripción del Reeferman Genetics Herb Grinder Metal",
             "categoria": "Sin categoría",
             "precio": 19.50,
-            "stock": 80,
+            "stock": 800,
             "image_name": "images/reeferman-genetics-herb-grinder-metal.png",
         },
         {
@@ -21,7 +21,7 @@ productos = {
             "descripcion": "Descripción del Carrete Electrico Para Pescar",
             "categoria": "Sin categoría",
             "precio": 34.75,
-            "stock": 120,
+            "stock": 1200,
             "image_name": "images/carrete-electrico-para-pescar.jpg",
         },
         {
@@ -29,7 +29,7 @@ productos = {
             "descripcion": "Descripción del Pelota Metálica Digital",
             "categoria": "Sin categoría",
             "precio": 25.00,
-            "stock": 60,
+            "stock": 600,
             "image_name": "images/pelota-metalica-digital.png",
         },
         {
@@ -37,7 +37,7 @@ productos = {
             "descripcion": "Descripción del Rubiks Cubo",
             "categoria": "Sin categoría",
             "precio": 39.50,
-            "stock": 150,
+            "stock": 1500,
             "image_name": "images/generic-product.png",
         },
     ],
@@ -47,7 +47,7 @@ productos = {
             "descripcion": "Increíble Laptop con características premium",
             "categoria": "Laptop",
             "precio": 1599.99,
-            "stock": 20,
+            "stock": 200,
             "image_name": "images/laptop-premium-x.png",
         },
         {
@@ -55,7 +55,7 @@ productos = {
             "descripcion": "Laptop ultraligera, perfecta para viajes",
             "categoria": "Laptop",
             "precio": 1299.50,
-            "stock": 15,
+            "stock": 150,
             "image_name": "images/laptop-ultraligera-y.png",
         },
         {
@@ -63,7 +63,7 @@ productos = {
             "descripcion": "Potente laptop diseñada para juegos intensivos",
             "categoria": "Laptop",
             "precio": 1799.75,
-            "stock": 10,
+            "stock": 100,
             "image_name": "images/laptop-gamer-z.png",
         },
         {
@@ -71,7 +71,7 @@ productos = {
             "descripcion": "Laptop resistente y duradera para cualquier entorno",
             "categoria": "Laptop",
             "precio": 1499.00,
-            "stock": 25,
+            "stock": 250,
             "image_name": "images/laptop-todo-terreno-a1.png",
         },
         {
@@ -79,7 +79,7 @@ productos = {
             "descripcion": "Laptop asequible con buen rendimiento",
             "categoria": "Laptop",
             "precio": 899.99,
-            "stock": 30,
+            "stock": 300,
             "image_name": "images/laptop-economica-b2.png",
         },
     ],
@@ -89,7 +89,7 @@ productos = {
             "descripcion": "Potente computadora de escritorio para uso profesional",
             "categoria": "Desktop",
             "precio": 2299.99,
-            "stock": 12,
+            "stock": 120,
             "image_name": "images/pc-de-escritorio-potente-x.png",
         },
         {
@@ -97,7 +97,7 @@ productos = {
             "descripcion": "Computadora de escritorio compacta, ideal para espacios reducidos",
             "categoria": "Desktop",
             "precio": 1499.50,
-            "stock": 18,
+            "stock": 180,
             "image_name": "images/pc-de-escritorio-compacta-y.png",
         },
         {
@@ -105,7 +105,7 @@ productos = {
             "descripcion": "Computadora de escritorio diseñada para juegos de alta gama",
             "categoria": "Desktop",
             "precio": 1999.75,
-            "stock": 8,
+            "stock": 80,
             "image_name": "images/pc-de-escritorio-gamer-z.png",
         },
         {
@@ -113,7 +113,7 @@ productos = {
             "descripcion": "Computadora de escritorio todo en uno con pantalla integrada",
             "categoria": "Desktop",
             "precio": 1799.00,
-            "stock": 15,
+            "stock": 150,
             "image_name": "images/pc-de-escritorio-todo-en-uno-a1.png",
         },
         {
@@ -121,7 +121,7 @@ productos = {
             "descripcion": "Computadora de escritorio básica para tareas diarias",
             "categoria": "Desktop",
             "precio": 899.99,
-            "stock": 25,
+            "stock": 250,
             "image_name": "images/pc-de-escritorio-basica-b2.png",
         },
     ],
@@ -131,7 +131,7 @@ productos = {
             "descripcion": "Teclado mecánico con retroiluminación RGB para jugadores",
             "categoria": "Periférico",
             "precio": 99.99,
-            "stock": 50,
+            "stock": 500,
             "image_name": "images/teclado-mecánico-gaming-x.png",
         },
         {
@@ -139,7 +139,7 @@ productos = {
             "descripcion": "Ratón inalámbrico ergonómico con sensor de alta precisión",
             "categoria": "Periférico",
             "precio": 49.50,
-            "stock": 40,
+            "stock": 400,
             "image_name": "images/raton-inalambrico-ergonomico-y.png",
         },
         {
@@ -147,7 +147,7 @@ productos = {
             "descripcion": "Auriculares inalámbricos con cancelación de ruido para una experiencia inmersiva",
             "categoria": "Periférico",
             "precio": 129.75,
-            "stock": 30,
+            "stock": 300,
             "image_name": "images/auriculares-con-cancelacion-de-ruido-z.png",
         },
         {
@@ -155,7 +155,7 @@ productos = {
             "descripcion": "Monitor curvo de alta resolución para una visualización envolvente",
             "categoria": "Periférico",
             "precio": 299.00,
-            "stock": 20,
+            "stock": 200,
             "image_name": "images/monitor-curvo-de-27-pulgadas-a1.png",
         },
         {
@@ -163,7 +163,7 @@ productos = {
             "descripcion": "Impresora multifuncional para hogar y oficina",
             "categoria": "Periférico",
             "precio": 149.99,
-            "stock": 35,
+            "stock": 350,
             "image_name": "images/impresora-multifuncional-b2.png",
         },
     ],
@@ -173,7 +173,7 @@ productos = {
             "descripcion": "Gadget innovador con múltiples funciones",
             "categoria": "Otros",
             "precio": 79.99,
-            "stock": 25,
+            "stock": 250,
             "image_name": "images/gadget-innovador-x.png",
         },
         {
@@ -181,7 +181,7 @@ productos = {
             "descripcion": "Accesorio tecnológico único para mejorar la experiencia del usuario",
             "categoria": "Otros",
             "precio": 59.50,
-            "stock": 15,
+            "stock": 150,
             "image_name": "images/accesorio-tecnológico-unico-y.png",
         },
         {
@@ -189,7 +189,7 @@ productos = {
             "descripcion": "Dispositivo inteligente para el hogar con conectividad avanzada",
             "categoria": "Otros",
             "precio": 129.75,
-            "stock": 12,
+            "stock": 120,
             "image_name": "images/dispositivo-iInteligente-para-el-hogar-z.png",
         },
         {
@@ -197,7 +197,7 @@ productos = {
             "descripcion": "Gafas de realidad virtual para una experiencia inmersiva",
             "categoria": "Otros",
             "precio": 199.00,
-            "stock": 18,
+            "stock": 180,
             "image_name": "images/gafas-de-realidad-virtual-a1.png",
         },
         {
@@ -205,7 +205,7 @@ productos = {
             "descripcion": "Batería externa de alta capacidad para cargar dispositivos móviles",
             "categoria": "Otros",
             "precio": 49.99,
-            "stock": 40,
+            "stock": 400,
             "image_name": "images/bateria-externa-de-alta-capacidad-b2.png",
         },
     ],

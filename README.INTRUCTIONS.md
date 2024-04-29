@@ -40,6 +40,11 @@ Set the environment variables::
     $ export FLASK_ENV=development
     $ export FLASK_CONFIG=development
     ```
+or, just in one line:
+
+    ```bash
+    $ export FLASK_APP=run && export FLASK_ENV=development && export FLASK_CONFIG=development
+    ```
 
 **Note:** If you want to run the app in debug mode, add the below environment variable as well:
 
