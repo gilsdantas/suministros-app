@@ -7,7 +7,55 @@
             <div class="col-lg-12">
                 <div class="intro-message">
                     <h1>Admin Dashboard</h1>
-                    <h3>¡Solo para administradores!</h3>
+                    <div>
+                        <h2>Estadísticas</h2>
+                        <hr class="intro-divider">
+                        <div class="container mt-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Distribution of User Registrations</h5>
+                                            <img src="data:image/png;base64,{{ user_chart_image }}" class="img-fluid" alt="User Registrations">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="intro-divider">
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Product Sales Distribution</h5>
+                                            <img src="data:image/png;base64,{{ product_chart_image }}" class="img-fluid" alt="Product Sales">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="intro-divider">
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Sales Trend</h5>
+                                            <img src="data:image/png;base64,{{ sales_chart_image }}" class="img-fluid" alt="Sales Trend">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="intro-divider">
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Total Sales for Current Month</h5>
+                                            <img src="data:image/png;base64,{{ monthly_sales_chart_image }}" class="img-fluid" alt="Total Sales for Current Month">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <hr class="intro-divider">
                 </div>
             </div>

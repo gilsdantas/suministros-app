@@ -8,6 +8,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import FileUploadField, Select2Widget
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileRequired
+from passlib.hash import sha256_crypt
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import fields, validators
@@ -51,7 +52,7 @@ class LoginAdminForm(BaseForm):
             self.email.errors.append("Usuario(a) inválido")
             return False
 
-        if not check_password_hash(usuario.password, self.password.data):
+        if not sha256_crypt.verify(self.password.data, usuario.password):
             self.password.errors.append("Contrasenã inválida")
             return False
 

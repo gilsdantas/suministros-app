@@ -79,7 +79,7 @@ Note: An _ADMIN_ was created to allow access the admin page: admin@admin.com/adm
 ## Next Steps
 
 As the next steps of this project, some topics should be addressed:
-- Users pre populated are unable to logging in from the home page
+- Password are stored in plain text. Use a `passlib` or any other framework like `werkzeug.security`
 - Redirecting is not working properly when a new user does a registration
 - Click on Home or company name (Maria Online Store) is not redirecting to the home page
 - Flash messages (notifications need to be revisited)

@@ -1,10 +1,9 @@
 # Built-in imports
 # Thirty part imports
-from flask import render_template, flash, abort, redirect, url_for
+from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import joinedload
 
 # Local imports
 from . import usuario
@@ -17,7 +16,7 @@ from ..models import Usuario, Producto, Venta
 @login_required
 def usuario_detalles():
     """
-    Show the usuarios detail
+    Show the user detail
     """
 
     usuario_obj: Usuario = Usuario.query.get_or_404(current_user.id)
@@ -28,7 +27,7 @@ def usuario_detalles():
 @login_required
 def editar_usuario(usuario_id):
     """
-    Edit a usuarios
+    Edit a user
     """
 
     usuario_obj: Usuario = Usuario.query.get_or_404(usuario_id)
@@ -66,33 +65,6 @@ def editar_usuario(usuario_id):
         user=usuario_obj,
         title="Editar Usuario",
     )
-
-
-#
-#
-# @usuarios.route("/eliminar-producto/<id>")
-# def eliminar_producto(id):
-#     producto = db.session.query(Producto).filter_by(id=int(id)).delete()
-#     db.session.commit()
-#
-#     return redirect(url_for("home"))
-#
-#
-# @usuarios.route("/tarea-hecha/<id>")
-# def hecha(id):
-#     # Se obtiene la tarea que se busca
-#     tarea = db.session.query(Producto).filter_by(id=int(id)).first()
-#
-#     # Guardamos en la variable booleana de la tarea, su contrario
-#     tarea.hecha = not tarea.hecha
-#
-#     # Ejecutar la operación pendiente de la base de datos return redirect(url_for('home')) # Esto nos redirecciona a
-#     # la función home()
-#     db.session.commit()
-#
-#     # Esto nos redirecciona a la función home() y si todo ha ido bien, al refrescar, la tarea eliminada ya no
-#     # aparecera en el  listado
-#     return redirect(url_for("home"))
 
 
 @usuario.route("/usuarios/<int:usuario_id>/dashboard", methods=["GET", "POST"])

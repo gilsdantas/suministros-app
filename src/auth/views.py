@@ -2,8 +2,8 @@
 # Third-Party imports
 from flask import flash, redirect, render_template, request, url_for, get_flashed_messages
 from flask_login import login_required, login_user, logout_user, LoginManager
+from passlib.hash import sha256_crypt
 from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.security import check_password_hash
 
 # Local imports
 from . import auth
@@ -27,7 +27,7 @@ def signup():
             apellido=req.get("apellido"),
             username=req.get("username"),
             email=req.get("email"),
-            password=req.get("password"),
+            password=sha256_crypt.hash(req.get("password")),
             is_admin=req.get("is_admin", False),
         )
 
@@ -67,7 +67,12 @@ def login():
         if form.validate_on_submit():
             # Check if the user exists in the DB and if the password entered matches the password in the DB
             usuario = Usuario.query.filter_by(email=form.email.data).first()
-            if usuario and check_password_hash(usuario.password, form.password.data):
+            print(f"===> usuario.password: {usuario.password}")
+            print(f"===> form.password.data: {form.password.data}")
+            print(
+                f"===> check_password_hash(usuario.password, form.password.data): {form.password.data == usuario.password}"
+            )
+            if usuario and (form.password.data == usuario.password):
                 # Log user in
                 login_user(usuario)
 

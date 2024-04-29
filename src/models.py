@@ -1,20 +1,16 @@
 # Built-in imports
-import os
 from datetime import datetime
 from pathlib import Path
 
-from flask import current_app
-
 # Thirty part imports
+from flask import current_app
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, Table, DateTime, LargeBinary
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float, Table, DateTime
 from sqlalchemy.orm import relationship
-from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
 # Local imports
-# from src import db
 
 db = SQLAlchemy()
 
@@ -91,7 +87,8 @@ class Usuario(UserMixin, db.Model):
     apellido = Column(String(120), index=True, unique=False, nullable=False)
     username = Column(String(50), index=True, unique=True, nullable=False)
     email = Column(String(80), index=True, unique=True, nullable=False)
-    password = Column(String(128))
+    fecha_de_registro = Column(String(23), nullable=False)
+    password = Column(String())
     is_admin = Column(Boolean, default=False)
 
     # Establishing the relationship between Usuario and Producto
@@ -117,13 +114,13 @@ class Usuario(UserMixin, db.Model):
     def __unicode__(self):
         return self.username
 
-    def __init__(self, nombre, apellido, email, username, password, is_admin=False):
+    def __init__(self, nombre, apellido, email, fecha_de_registro, username, password, is_admin=False):
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
+        self.fecha_de_registro = fecha_de_registro
         self.username = username
-        # More about the method below: https://tedboy.github.io/flask/generated/werkzeug.generate_password_hash.html
-        self.password = generate_password_hash(password, method="pbkdf2:sha256")
+        self.password = password
         self.is_admin = is_admin
 
     def __repr__(self):
@@ -166,7 +163,7 @@ class Venta(db.Model):
     producto_id = Column(Integer, ForeignKey("producto.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuario.id"), nullable=False)
     cantidad = Column(Integer, nullable=False)
-    fecha_de_venta = Column(String(23), nullable=False)
+    fecha_de_venta = Column(DateTime, nullable=False)
 
     # Establishing the one-to-many relationship with Producto
     producto = relationship("Producto", back_populates="ventas")
