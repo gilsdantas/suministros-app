@@ -1,12 +1,15 @@
 # Built-in imports
 # Third-Party imports
 from flask_wtf import FlaskForm
-from werkzeug.security import check_password_hash
-from wtforms import PasswordField, StringField, SubmitField, ValidationError, form
+from werkzeug.security import check_password_hash, generate_password_hash
+from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+from src.models import Usuario
+
+
 # Local imports
-from ..models import Usuario
+# from ..models import Usuario
 
 
 class BaseForm(FlaskForm):
@@ -41,11 +44,11 @@ class SignUpForm(BaseForm):
     )
     submit = SubmitField("Registro")
 
-    def validar_email(self, field):
+    def validate_email(self, field):
         if Usuario.query.filter_by(email=field.data).first():
             raise ValidationError("Correo electrónico ya está en uso.")
 
-    def validar_username(self, field):
+    def validate_username(self, field):
         if Usuario.query.filter_by(username=field.data).first():
             raise ValidationError("El nombre de usuarios ya está en uso.")
 
@@ -57,13 +60,7 @@ class LoginForm(BaseForm):
 
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Contraseña", validators=[DataRequired()])
-    submit = SubmitField("Login")
-
-    def validar_login(self, field):
-        usuario = self.get_user()
-
-        if usuario is None or not check_password_hash(usuario.password, self.password.data):
-            raise ValidationError("Usuario(a) o contrasenã inválidos")
+    submit = SubmitField("Login")  # User validation is done only in the server side for safety reasons
 
     def get_user(self):
-        return Usuario.query.filter_by(login=self.email.data).first()
+        return Usuario.query.filter_by(email=self.email.data).first()

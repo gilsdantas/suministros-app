@@ -56,7 +56,7 @@ def crear_producto():
             # add productos to the database
             db.session.add(producto)
             db.session.commit()
-            flash("Ha agregado exitosamente un nuevo producto.")
+            flash("Ha agregado exitosamente un nuevo producto.", "info")
         except SQLAlchemyError:
             db.session.rollback()
             abort(403, f"Lo producto ya existe en la base de datos. ({producto.nombre}).")
@@ -64,7 +64,7 @@ def crear_producto():
             abort(500, error)
 
         # redirect to productos page
-        return redirect(url_for("admin.lista_productos"))
+        return redirect(url_for("admin_bp.lista_productos"))
 
     # load question template
     return render_template(
@@ -99,7 +99,7 @@ def editar_producto(id_producto):
         try:
             # edit product in the database
             db.session.commit()
-            flash("Ha editado correctamente el producto.")
+            flash("Ha editado correctamente el producto.", "info")
         except SQLAlchemyError:
             db.session.rollback()
             abort(403, f"El nombre del producto ya existe en la base de datos ({producto.nombre}).")
@@ -107,7 +107,7 @@ def editar_producto(id_producto):
             abort(500, error)
 
         # redirect to the productos page
-        return redirect(url_for("admin.lista_productos"))
+        return redirect(url_for("admin_bp.lista_productos"))
 
     form.nombre.data = producto.nombre
     form.descripcion.data = producto.descripcion
@@ -137,10 +137,10 @@ def eliminar_productos(id_producto):
 
     db.session.delete(producto)
     db.session.commit()
-    flash("Ha eliminado correctamente el producto.")
+    flash("Ha eliminado correctamente el producto.", "info")
 
     # redirect to the product page
-    return redirect(url_for("admin.lista_productos"))
+    return redirect(url_for("admin_bp.lista_productos"))
 
 
 @store.route("/admin/usuarios", methods=["GET", "POST"])
@@ -180,7 +180,7 @@ def edit_users(id_usuario):
         try:
             # edit usuarios in the database
             db.session.commit()
-            flash("Ha editado exitosamente al usuarios.")
+            flash("Ha editado exitosamente al usuarios.", "info")
         except SQLAlchemyError:
             db.session.rollback()
             abort(403, f'Usuario "{usuario.username}" o e-mail "{usuario.email}" ya existen en la base de datos.')

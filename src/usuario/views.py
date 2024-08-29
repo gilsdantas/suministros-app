@@ -1,9 +1,9 @@
 # Built-in imports
 # Thirty part imports
-from flask import render_template, flash, abort, redirect, url_for
+from flask import render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import joinedload
 
 # Local imports
 from . import usuario
@@ -16,18 +16,18 @@ from ..models import Usuario, Producto, Venta
 @login_required
 def usuario_detalles():
     """
-    Show the usuarios detail
+    Show the user detail
     """
 
     usuario_obj: Usuario = Usuario.query.get_or_404(current_user.id)
     return render_template("usuarios/users.html", usuario=usuario_obj, title="Usuario Detalles")
 
 
-@usuario.route("/usuarios/editar/<int:usuario_id>", methods=["GET", "POST"])
+@usuario.route("/usuarios/<int:usuario_id>/editar", methods=["GET", "POST"])
 @login_required
 def editar_usuario(usuario_id):
     """
-    Edit a usuarios
+    Edit a user
     """
 
     usuario_obj: Usuario = Usuario.query.get_or_404(usuario_id)
@@ -43,12 +43,12 @@ def editar_usuario(usuario_id):
         try:
             # edit usuarios in the database
             db.session.commit()
-            flash("Ha editado correctamente el usuarios.")
+            flash("Ha editado correctamente el usuarios.", "info")
         except SQLAlchemyError:
             db.session.rollback()
-            abort(403, f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.')
+            flash(f'Username "{usuario.username}" o email "{usuario.email}" ya existen en la base de datos.', "error")
         except Exception as error:
-            abort(500, error)
+            flash(str(error), "error")
 
         # redirect to the usuarios page
         return redirect(url_for("usuario_bp.usuario_detalles"))
@@ -67,33 +67,6 @@ def editar_usuario(usuario_id):
     )
 
 
-#
-#
-# @usuarios.route("/eliminar-producto/<id>")
-# def eliminar_producto(id):
-#     producto = db.session.query(Producto).filter_by(id=int(id)).delete()
-#     db.session.commit()
-#
-#     return redirect(url_for("home"))
-#
-#
-# @usuarios.route("/tarea-hecha/<id>")
-# def hecha(id):
-#     # Se obtiene la tarea que se busca
-#     tarea = db.session.query(Producto).filter_by(id=int(id)).first()
-#
-#     # Guardamos en la variable booleana de la tarea, su contrario
-#     tarea.hecha = not tarea.hecha
-#
-#     # Ejecutar la operación pendiente de la base de datos return redirect(url_for('home')) # Esto nos redirecciona a
-#     # la función home()
-#     db.session.commit()
-#
-#     # Esto nos redirecciona a la función home() y si todo ha ido bien, al refrescar, la tarea eliminada ya no
-#     # aparecera en el  listado
-#     return redirect(url_for("home"))
-
-
 @usuario.route("/usuarios/<int:usuario_id>/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard(usuario_id):
@@ -104,14 +77,18 @@ def dashboard(usuario_id):
     # Get the user object from DB
     usuario_obj = Usuario.query.get_or_404(usuario_id)
 
-    # Use joinedload to eager load the associated products
-    user_products = Usuario.query.filter(Usuario.id == usuario_obj.id).options(joinedload(Usuario.productos)).first()
-
-    # Access the products through user_products.products
-    products = user_products.productos if user_products else []
+    # Query the Venta table to get the products bought by the user
+    user_products = (
+        db.session.query(Producto, func.sum(Venta.cantidad).label("cantidad"))
+        .join(Venta)
+        .filter(Venta.usuario_id == usuario_obj.id)
+        .group_by(Producto)
+        .all()
+    )
 
     return render_template(
         "home/dashboard.html",
-        no_result_yet=bool(products),
+        products=user_products,
+        is_empty=True if user_products == [] else False,
         title="Home Dashboard",
     )
