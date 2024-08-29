@@ -11,9 +11,28 @@ These are the main tech requirement. The complete list is in requirements.txt.
 - [Pip](https://pip.pypa.io/)
 - [Flask](https://flask.palletsprojects.com/)
 - [SQLite](http://sqlite.org/) (or any other supported database)
+- [Git](https://www.git.com) (only need to clone the repository)
 
+### Download the Repository
 
-### Installing
+To download the repository with the project, we simply need to "clone" the repository from GitHub.
+
+- Open/Create a folder where you want to have the project downloaded.
+- Open a terminal window (e.g. Git Bash) inside this folder
+  - Clone the repository
+    - For SSH:
+
+        ```bash
+        $ git clone git@github.com:gilsdantas/suministros-app.git
+        ```
+
+    - For HTTPS:
+
+        ```bash
+        $ git clone https://github.com/gilsdantas/suministros-app.git
+        ```
+
+### Installing/Configure
 
 The next step is install the project's Python dependencies. Make sure you have the
 Python installed. if you still don't have it go to the [official site](http://python.org/)
@@ -22,9 +41,10 @@ will install all necessary project dependencies.
 
 Installing with **Pip**:
 
-    cd path/to/project/suministros-app
-    pip install -r requirements.txt
-
+    ```bash
+    $ cd path/to/project/suministros-app
+    $ pip install -r requirements.txt
+    ```
 
 ### Run
 
@@ -52,7 +72,7 @@ or, just in one line:
     $ export FLASK_DEBUG=1
     ```
 
-Or on Windows cmd:
+Or on a Terminal Windows cmd:
 
     ```console
     c:\path\to\project\suministros-app> set FLASK_APP=run
